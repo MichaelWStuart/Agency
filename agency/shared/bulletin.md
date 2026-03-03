@@ -1,7 +1,7 @@
 # Bulletin
 Moored: Plan of the Day (Naval Operations)
 
-> Standing orders and organizational norms. Active cross-division directives.
+> Standing orders and organizational norms. Active cross-department directives.
 > All agents read this bulletin on muster before executing their brief.
 
 ---
@@ -24,9 +24,9 @@ automatically. They are not repeated here (TRUTH — single source).
 ## Known Constraints
 
 ### Context Window Limits
-- L3 sub-agents (station workers, field agents) have hard context limits
-- WOs with >6 deliverables risk exhausting context before QC runs
-- Cut smaller at Planning — 3-6 deliverables per WO is the sweet spot
+- L3 sub-agents (integration engineers, field agents) have hard context limits
+- Plots with >6 deliverables risk exhausting context before validation runs
+- Cut smaller at Plotting — 3-6 deliverables per plot is the sweet spot
 
 ### CursorBot Timing
 - Takes 10-20 minutes per run

@@ -60,7 +60,7 @@ DOSSIER handoffs, ESCALATION).
 Moored: Ship's Deck Log Immutability (Naval Regulations)
 
 LIFECYCLE governs artifacts — immutable products of work (dossiers,
-evidence, gate reports, work orders). DIRECTIVE-class documents (mission
+evidence, validation reports, integration plots). DIRECTIVE-class documents (mission
 manifests) are mutable command documents governed by command authority,
 not LIFECYCLE. See Spine: DIRECTIVE — complementary governance, not
 exception.
@@ -91,7 +91,7 @@ timestamp. This enables:
 
 **Cleanup protocol:**
 - **Hot -> cleaned** after operation briefing (CLOSURE). Exception: artifacts
-  promoted to warm tier by the producing division.
+  promoted to warm tier by the producing department.
 - **Warm -> pruned** by Director decision. Default: preserved until
   explicitly pruned. No automatic expiration.
 - **Cold -> rolling retention.** Events older than N operations are pruned
@@ -117,7 +117,7 @@ field typing (`contracts/payloads.md`), instruction catalogs (`contracts/catalog
 
 **Identity file scope:** Identity files define persona, permissions,
 context contract, and relationship map. Operational procedures live in
-division/department protocols. Identity files pointer-reference
+department protocols. Identity files pointer-reference
 protocols — they do not duplicate them.
 
 ---
@@ -154,16 +154,16 @@ If it exists in two places, one is wrong.
 **INTAKE: Dossier as Input**
 Moored: Intelligence Preparation of the Battlefield (IPB, ATP 2-01.3)
 
-Divisions consume intelligence products. They do not generate their own.
-Only Intelligence produces dossiers. Production reads them. QC verifies
+Departments consume intelligence products. They do not generate their own.
+Only Intelligence produces dossiers. Integration reads them. Validation verifies
 against them.
 
 **STRATEGY: Strategy**
 Moored: Deliberate vs Hasty Operations (FM 3-90, Tactical Operations)
 
 The same pipeline serves different strategies, declared at operation start:
-- **Survey:** Linear. Intelligence once -> Model Shop once -> surface -> done.
-- **Calibrate:** Iterative. Intelligence sweep -> Model Shop fix ->
+- **Survey:** Linear. Intelligence once -> Integration once -> surface -> done.
+- **Calibrate:** Iterative. Intelligence sweep -> Integration fix ->
   Intelligence verify -> loop until convergence.
 
 **RESOLVE: Autonomous Resolution**
@@ -229,19 +229,19 @@ Identities exist in one relationship class with one structural concept.
 New relationship classes can emerge through governance by defining:
 class name, context rule, interaction pattern.
 
-**Relationship map:** See `cic/registry.json` for the canonical entity
+**Relationship map:** See `shared/roster.json` for the canonical entity
 hierarchy (B-001 through B-010). The map encodes Subordinate relationships
 (L0 -> L1 -> L2 -> L3) and Sibling groupings.
 
 **ISOLATION: Knowledge Isolation**
 Moored: Officer/Enlisted Development Pipelines (Military Personnel Management)
 
-Orchestrator and worker identities are managed in separate facilities
-within the Cadre. Their knowledge evolves independently:
+Orchestrator and worker identities have distinct knowledge domains.
+Their knowledge evolves independently:
 
-- **Orchestrator knowledge** (Wardroom): routing patterns, escalation
+- **Orchestrator knowledge**: routing patterns, escalation
   effectiveness, coordination strategies, dispatch optimization
-- **Worker knowledge** (Barracks): implementation craft, tool mastery,
+- **Worker knowledge**: implementation craft, tool mastery,
   quality techniques, domain expertise
 
 Cross-contamination degrades both roles: orchestrators become
@@ -254,30 +254,22 @@ and relationship classifications are role-agnostic.
 **COMPOSITION: Agency Composition**
 Moored: Ship Organization (SORM, OPNAVINST 3120.32)
 
-The Agency is composed of top-level organizational units called **branches**.
-Three types, each with its own mechanism:
+The Agency is composed of organizational units:
 
-- **Operational branches** — capability areas that execute work.
+- **Operational departments** — capability areas that execute work.
   Mechanism: sub-agent dispatch (LAUNCH_BRIEF → RETURN).
-  Instances: Intelligence, Model Shop.
-- **Institutional branches** — infrastructure that manages identities,
-  capabilities, and institutional knowledge.
-  Mechanism: facilities, rosters, shared resources.
-  Instance: the Cadre (containing Wardroom + Barracks).
-- **Infrastructure branches** — automated services that support
-  operations without participating in the command chain.
+  Instances: Intelligence, Integration.
+- **Shared resources** — institutional knowledge, capabilities, and
+  standing orders. Consumed by all departments.
+  Location: `shared/` (roster, armory, bulletin, stream protocol).
+- **Infrastructure** — automated services that support operations
+  without participating in the command chain.
   Mechanism: automated protocols (scripts, manifests).
   Instance: the CIC (Combat Information Center).
 
-All three types are first-class in the Spine. The Agency operates on
-three axes:
-- **Operational** (divisions): WHAT work gets done
-- **Institutional** (Cadre): WHO does the work and how they develop
-- **Infrastructure** (CIC): WHAT runs in the background
-
-Branch types are unified by being first-class organizational units.
-They are differentiated by mechanism — not every branch is staffed
-with an identity; not every branch dispatches sub-agents.
+The Agency operates on two axes:
+- **Operational** (departments): WHAT work gets done
+- **Infrastructure** (CIC + shared): WHAT runs in the background + WHO does the work
 
 **MOORING: Grounded Reference**
 Moored: Navigational Fixing / Triangulation (Maritime Navigation)

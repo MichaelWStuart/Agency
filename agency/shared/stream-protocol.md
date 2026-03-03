@@ -10,9 +10,9 @@ Moored: Ship's Status Board / EOOW Log (Naval Engineering Watch)
 
 Single-bunk identities log to: `~/.claude/agency-workspace/streams/B-NNN.md`
 
-Multi-bunk identity templates (Field Agent, Station Worker) use the
+Multi-bunk identity templates (Field Agent, Integration Engineer) use the
 CALLSIGN from their BRIEF as the stream filename: `streams/{CALLSIGN}.md`
-(e.g., `streams/Hawk.md`, `streams/Mason.md`).
+(e.g., `streams/Hawk.md`, `streams/Atlas.md`).
 
 ---
 
