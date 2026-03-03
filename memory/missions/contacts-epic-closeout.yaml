@@ -1,0 +1,108 @@
+# MISSION MANIFEST
+# Template: mission-manifest-v1
+---
+metadata:
+  name: "Contacts Epic Closeout"
+  domain: [contacts]
+  strategy: ship
+  scope_doc: null
+  scope_areas: [Contacts]
+  created: 2026-03-03T15:00:00Z
+  status: complete
+  completed: 2026-03-03T15:34:00Z
+
+objectives:
+  - Fix five remaining QA bugs blocking Contacts epic closure
+  - Ship single PR with all fixes
+  - Advance all Contacts feature parents to Merged and epic ROM-6 to Ready for QA
+
+exclusions:
+  - AI/Breeze features
+  - Shared shell components
+  - L-scope architectural items
+
+overrides: []
+
+operations:
+  - id: op-1
+    type: ship
+    branch: fix/rom-6-contacts-closeout
+    pr: 275
+    pr_url: https://github.com/g2i-ai/hubshot/pull/275
+    status: merged
+    note: "Five bugs: ROM-768, ROM-773, ROM-774, ROM-775, ROM-816. All gates PASS. CursorBot clean."
+
+surfaces:
+  - name: "Create Contact Form"
+    sub_surfaces: [create-contact-form]
+    captured: false
+    delta_analyzed: false
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain: []
+    note: "ROM-768 (lifecycle search), ROM-775 (lead status search)"
+
+  - name: "Phone Number Input"
+    sub_surfaces: [phone-number-input]
+    captured: false
+    delta_analyzed: false
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain: []
+    note: "ROM-773 (parse fallback + save disable), ROM-774 (info icon)"
+
+  - name: "Contact Preview Panel"
+    sub_surfaces: [contact-preview-panel]
+    captured: false
+    delta_analyzed: false
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain: []
+    note: "ROM-816 (delete action missing)"
+
+prior_intelligence:
+  note: "Director-sourced. All five bugs confirmed unfixed via code inspection. Fix instructions provided with file paths and component names."
+  dossier_chain:
+    - ~/.claude/agency-workspace/dossiers/contacts-closeout-director-20260303.yaml
+
+discovery:
+  method: "Director code inspection + QA ticket review"
+
+qa_tickets:
+  in_scope:
+    - ticket: ROM-768
+      title: "Life Cycle Stage search missing"
+    - ticket: ROM-773
+      title: "Invalid Phone Number Formatting Defaults to US"
+    - ticket: ROM-774
+      title: "Info Icon Missing in Phone number format popup"
+    - ticket: ROM-775
+      title: "Lead Status search missing"
+    - ticket: ROM-816
+      title: "Cannot delete contact from preview panel"
+  out_of_scope: []
+
+linear_tickets:
+  epic: ROM-6
+  features:
+    - ROM-7   # Creating Contacts
+    - ROM-29  # Viewing Contacts
+    - ROM-46  # Editing Contacts
+    - ROM-60  # Deleting Contacts
+    - ROM-66  # Contact Filtering and Search
+    - ROM-79  # Contact Sorting
+    - ROM-85  # Contact Column Customization
+
+linear_closeout:
+  after_merge:
+    - action: "Transition feature parents to Merged"
+      tickets: [ROM-7, ROM-29, ROM-46, ROM-60, ROM-66, ROM-79, ROM-85]
+    - action: "Transition epic to Ready for QA"
+      tickets: [ROM-6]
+
+progress:
+  total_surfaces: 3
+  captured: 0
+  analyzed: 0
+  fixes_applied: 0
+  converged: 0

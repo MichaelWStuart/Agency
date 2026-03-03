@@ -1,0 +1,140 @@
+# MISSION MANIFEST
+# Template: mission-manifest-v1
+---
+metadata:
+  name: "Lists, Filters & Bug Sweep"
+  domain: [lists, filters, contacts, companies, properties]
+  strategy: calibrate
+  scope_doc: memory/project/scope.csv
+  scope_areas: [Lists, Filters, Contacts, Companies, Properties]
+  created: 2026-03-03T06:30:00Z
+  status: active
+
+objectives:
+  - Close fidelity gaps on Lists/Segments surfaces vs reference app
+  - Fix all Triage bugs across Properties, Companies, and Contacts
+  - Advance Linear statuses for shipped Lists features
+
+exclusions:
+  - AI/Breeze features
+  - Shared shell components (sidebar nav, global header)
+  - ROM-764 (popup vs drawer — assigned to Ian)
+  - L-scope architectural items deferred: details side panel, view tabs system, advanced filter sidebar conversion
+  - Phone number formatting internationalization (ROM-773, ROM-774 — complex i18n)
+
+overrides: []
+
+operations:
+  - id: op-1
+    type: fix
+    branch: null
+    pr: null
+    status: planned
+    note: "Lists view fidelity fixes + Triage bug sweep across all domains"
+
+surfaces:
+  - name: "Object Lists Management View"
+    sub_surfaces: [object-lists-view]
+    captured: true
+    delta_analyzed: true
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/lists-object-lists-view-delta-20260302T2300Z.yaml
+
+  - name: "Advanced Filters"
+    sub_surfaces: [advanced-filters]
+    captured: true
+    delta_analyzed: true
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/lists-advanced-filters-delta-20260303T0100Z.yaml
+
+prior_intelligence:
+  note: "Two dossiers from prior calibration survey. Object Lists View at 15% fidelity (23 gaps). Advanced Filters at 30% fidelity (20 gaps). Lists code was built in 5 WOs (PRs #168-#176), all merged."
+  dossier_chain:
+    - memory/dossiers/lists-object-lists-view-delta-20260302T2300Z.yaml
+    - memory/dossiers/lists-advanced-filters-delta-20260303T0100Z.yaml
+  chart: memory/chart.yaml
+
+discovery:
+  method: "dossier-review + linear-query (Triage bugs across all domains)"
+
+qa_tickets:
+  in_scope:
+    # Properties
+    - ticket: ROM-821
+      title: "Navigation to properties settings page is not working"
+    - ticket: ROM-822
+      title: "Property Names are not Sorted Alphabetically"
+    - ticket: ROM-823
+      title: "Tab Order is in-correct"
+    - ticket: ROM-824
+      title: "Table Headers no Sort icons"
+    - ticket: ROM-825
+      title: "Table no select row/select all"
+    - ticket: ROM-826
+      title: "All Users Dropdown is missing"
+    - ticket: ROM-827
+      title: "Table Group Column values are not formatted"
+    - ticket: ROM-828
+      title: "Table Section pagination is missing"
+    - ticket: ROM-830
+      title: "Tab Section Count Format is wrong"
+    - ticket: ROM-832
+      title: "Edit Properties heading/description mismatch"
+    - ticket: ROM-834
+      title: "Property Settings hyperlink broken"
+    - ticket: ROM-840
+      title: "Create property button plus icon"
+    # Companies
+    - ticket: ROM-802
+      title: "Company Owner/Industry/Type label style"
+    - ticket: ROM-804
+      title: "Redirect to newly created company page"
+    - ticket: ROM-805
+      title: "Annual Revenue formatting"
+    # Contacts
+    - ticket: ROM-767
+      title: "Life Cycle Stage placeholder different"
+    - ticket: ROM-768
+      title: "Life Cycle Stage search missing"
+      note: "Fixed in Contacts Epic Closeout mission (PR #275)"
+    - ticket: ROM-775
+      title: "Lead Status search missing"
+      note: "Fixed in Contacts Epic Closeout mission (PR #275)"
+    - ticket: ROM-776
+      title: "Lead Status placeholder different"
+    - ticket: ROM-777
+      title: "Info Icon Popup context different"
+    - ticket: ROM-789
+      title: "Additional Fields in reference app"
+    - ticket: ROM-813
+      title: "UI blinks on sort"
+  out_of_scope:
+    - ticket: ROM-764
+      title: "Create Contact Opens Popup Instead of Drawer"
+      reason: "Assigned to Ian Goodman"
+    - ticket: ROM-773
+      title: "Invalid Phone Number Formatting Defaults to US"
+      reason: "Fixed in Contacts Epic Closeout mission (PR #275)"
+    - ticket: ROM-774
+      title: "Info Icon Missing in Phone number format popup"
+      reason: "Fixed in Contacts Epic Closeout mission (PR #275)"
+
+linear_tickets:
+  epic: ROM-365
+  features:
+    - ROM-366  # Creating Lists
+    - ROM-383  # Viewing Lists
+    - ROM-393  # Managing List Membership
+    - ROM-399  # Editing Lists
+    - ROM-405  # Deleting Lists
+
+progress:
+  total_surfaces: 2
+  captured: 2
+  analyzed: 2
+  fixes_applied: 0
+  converged: 0

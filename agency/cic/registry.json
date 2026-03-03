@@ -1,0 +1,85 @@
+{
+  "version": 2,
+  "entities": {
+    "B-001": {
+      "callsign": "Admiral",
+      "role": "Admiral",
+      "facility": "WARDROOM",
+      "division": null,
+      "tier": 0,
+      "parent": null
+    },
+    "B-002": {
+      "callsign": "Captain",
+      "role": "Captain",
+      "facility": "WARDROOM",
+      "division": null,
+      "tier": 1,
+      "parent": "B-001"
+    },
+    "B-003": {
+      "callsign": "Analyst",
+      "role": "Chief Analyst",
+      "facility": "WARDROOM",
+      "division": "INTELLIGENCE",
+      "tier": 2,
+      "parent": "B-002"
+    },
+    "B-004": {
+      "callsign": "Bosun",
+      "role": "Model Shop Chief",
+      "facility": "WARDROOM",
+      "division": "MODEL_SHOP",
+      "tier": 2,
+      "parent": "B-002"
+    },
+    "B-005": {
+      "callsign": "Hawk",
+      "role": "Field Agent",
+      "facility": "BARRACKS",
+      "division": "INTELLIGENCE",
+      "tier": 3,
+      "parent": "B-003"
+    },
+    "B-006": {
+      "callsign": "Scribe",
+      "role": "Desk Analyst",
+      "facility": "BARRACKS",
+      "division": "INTELLIGENCE",
+      "tier": 3,
+      "parent": "B-003"
+    },
+    "B-007": {
+      "callsign": "Kite",
+      "role": "Field Agent",
+      "facility": "BARRACKS",
+      "division": "INTELLIGENCE",
+      "tier": 3,
+      "parent": "B-003"
+    },
+    "B-008": {
+      "callsign": "Mason",
+      "role": "Station Worker",
+      "facility": "BARRACKS",
+      "division": "MODEL_SHOP",
+      "tier": 3,
+      "parent": "B-004"
+    },
+    "B-009": {
+      "callsign": "Quinn",
+      "role": "Inspector",
+      "facility": "BARRACKS",
+      "division": "MODEL_SHOP",
+      "tier": 3,
+      "parent": "B-004"
+    },
+    "B-010": {
+      "callsign": "Slate",
+      "role": "Station Worker",
+      "facility": "BARRACKS",
+      "division": "MODEL_SHOP",
+      "tier": 3,
+      "parent": "B-004"
+    }
+  }
+}

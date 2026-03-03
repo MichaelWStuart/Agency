@@ -1,0 +1,116 @@
+# DOSSIER — CONVERGENCE
+# Template: dossier-convergence-v1
+---
+metadata:
+  domain: contacts
+  timestamp: "2026-03-02T20:30:00Z"
+  strategy: calibrate
+  producer: intelligence/calibration
+  delta_dossier: ~/.claude/projects/-Users-michaelstuart-dev-hubshot/memory/dossiers/contacts-listview-delta-20260302T1930Z.yaml
+  iteration: 1
+
+verifications:
+  - gap_id: D-001
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "11 sidebar nav items (was 12). Settings moved to global header (improvement). Development and Breeze still missing. Expected 14."
+
+  - gap_id: D-002
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Collapse sidebar button still present."
+
+  - gap_id: D-003
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Still shows 'U' avatar and 'Unknown Account'."
+
+  - gap_id: D-004
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "No Free Trials link, no Open Assistant button. 'Knowledge base' button still present."
+
+  - gap_id: D-005
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "No count badge on any tab."
+
+  - gap_id: D-006
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Remove view buttons still always visible on each tab."
+
+  - gap_id: D-007
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "'More actions' button still present in toolbar."
+
+  - gap_id: D-008
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Copy button still present in toolbar."
+
+  - gap_id: D-009
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Sort button now shows 'Create Date (Most recent)' instead of 'First Name (Descending)'. Still displays inline state rather than just 'Sort'."
+
+  - gap_id: D-010
+    status: RESOLVED
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/filters-expanded.md
+    notes: "Quick filter buttons now present: Contact owner, Create date, Last activity date, Lead status, More, Advanced filters. Matches reference."
+
+  - gap_id: D-011
+    status: RESOLVED
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Filter bar collapsed by default on page load. Toggles correctly via Filters button."
+
+  - gap_id: D-012
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Still 7 columns. Expected 15. Missing: Primary Company, Marketing Contact Status, First Conversion Date, Currently In Sequence, Membership Notes, First Closed Order ID, Campaign of Last Booking, Date of Last Meeting Booked."
+
+  - gap_id: D-013
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "No Preview button on any row."
+
+  - gap_id: D-014
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Name is still a button element, not a link. Row cursor=pointer unchanged."
+
+  - gap_id: D-015
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "All avatars still show 'HS' instead of contact initials (e.g., 'ED' for Eve Davis)."
+
+  - gap_id: D-016
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/search-clear.md
+    notes: "URL unchanged after search. No ?query= parameter added."
+
+  - gap_id: D-017
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/search-clear.md
+    notes: "Clear button still clears text AND immediately refreshes results."
+
+  - gap_id: D-018
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "Still 'Prev' / 'Next' labels and page '1' button only."
+
+  - gap_id: D-019
+    status: REMAINING
+    evidence_ref: ~/.claude/agency-workspace/evidence/contacts/contacts-list-view-impl-v2/resting-state.md
+    notes: "No Settings Sidebar button in toolbar."
+
+regressions: []
+
+summary:
+  total_verified: 19
+  resolved: 2
+  remaining: 17
+  regressed: 0
+  recommendation: loop_targeted
+  rationale: "2 of 19 gaps resolved (D-010 Quick Filters, D-011 Filter Bar Default State). Both were P1/P2 severity. 0 regressions introduced. The 2 major gaps (D-010, D-012) split: D-010 resolved, D-012 (column count) remains. 17 gaps persist including 1 major (D-012), 5 minor (D-003, D-005, D-009, D-013, D-014, D-016), and the rest cosmetic. Convergence threshold (100% critical + major) not met due to D-012 remaining. Recommend targeted loop on D-012 plus P2 minor gaps."

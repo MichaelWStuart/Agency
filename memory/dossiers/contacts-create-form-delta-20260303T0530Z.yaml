@@ -1,0 +1,293 @@
+# DOSSIER — DELTA
+# Template: dossier-delta-v1
+---
+metadata:
+  domain: contacts
+  surface: create-contact-form
+  timestamp: "2026-03-03T05:30:00Z"
+  strategy: calibrate
+  producer: intelligence/analysis
+  mission: "Contacts Comprehensive"
+  iteration: 2
+  reference_dossier: memory/dossiers/contacts-create-form-delta-20260302T1945Z.yaml
+
+surfaces:
+  - name: Create Contact Form
+    reference_url: "https://app-na2.hubspot.com/object-builder/245093720/0-1/embed?"
+    implementation_url: "http://localhost:3002/contacts/245093720/objects/0-1/views/all/list (dialog overlay)"
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/"
+
+fidelity_score: 62
+
+gaps:
+  # =============================================
+  # REMAINING FROM PRIOR DELTA (VERIFIED STILL PRESENT)
+  # =============================================
+
+  - id: D-001
+    surface: create-contact-form
+    component: Contact Form
+    element: Field Visibility / Progressive Disclosure
+    layer: 4
+    category: behavior_mismatch
+    severity: major
+    priority: P1
+    expected: "Only Email, First name, Last name visible initially. Additional fields (Contact owner, Job title, Phone number, Lifecycle stage, Lead status, Marketing checkbox) appear AFTER email entry (progressive disclosure)."
+    actual: "ALL fields visible immediately on form open, including Contact owner, Job title, Phone number, Lifecycle stage, Lead status. No progressive disclosure. Note: mission exclusions list progressive disclosure as L-scope architecture, but this is a direct QA-filed gap. Keeping as documented finding."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: L
+
+  - id: D-002
+    surface: create-contact-form
+    component: Contact Form
+    element: Phone Number Field
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "Phone number renders as a multiline textbox"
+    actual: "Phone number renders as a button element (role='button') — clicking opens phone input component"
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: M
+
+  - id: D-003
+    surface: create-contact-form
+    component: Contact Form
+    element: Dropdown Implementation
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "Dropdowns (Lifecycle stage, Lead status) use button with haspopup='menu' opening a searchable combobox with autocomplete='list' and search input"
+    actual: "Dropdowns use combobox role directly, opening a listbox without search input. Missing search within dropdown (ROM-775, ROM-768)."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: M
+
+  - id: D-004
+    surface: create-contact-form
+    component: Contact Form
+    element: Contact Owner Default
+    layer: 3
+    category: state_mismatch
+    severity: minor
+    priority: P2
+    expected: "Contact owner pre-populated with logged-in user name"
+    actual: "Contact owner shows 'No owner' as default. ROM-765 confirms this is still open."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: M
+
+  - id: D-005
+    surface: create-contact-form
+    component: Contact Form
+    element: Lead Status Capitalization
+    layer: 2
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Lead status options use sentence case: 'In progress', 'Open deal', 'Attempted to contact', 'Bad timing'"
+    actual: "Lead status options use title case: 'In Progress', 'Open Deal', 'Attempted to Contact', 'Bad Timing'. ROM-776 confirms placeholder value also differs."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: S
+
+  - id: D-006
+    surface: create-contact-form
+    component: Marketing Section
+    element: Duplicate Checkboxes
+    layer: 2
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "Single checkbox for marketing contact"
+    actual: "Two checkbox elements rendered for marketing contact (one for legal basis, one for marketing contact status)"
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: S
+
+  - id: D-007
+    surface: create-contact-form
+    component: Action Buttons
+    element: Duplicate Close Button
+    layer: 2
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "Close (X) button in header only. Cancel button at bottom."
+    actual: "Close (X) button at header AND a separate Close button at bottom of dialog, in addition to Cancel button."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: S
+
+  # =============================================
+  # NEW GAPS FROM QA TICKETS + FRESH EVIDENCE
+  # =============================================
+
+  - id: D-008
+    surface: create-contact-form
+    component: Contact Form
+    element: Email-only creation validation
+    layer: 4
+    category: behavior_mismatch
+    severity: minor
+    priority: P2
+    expected: "Contact can be created with email address only (no first/last name required)"
+    actual: "Create button remains disabled when only email is provided. ROM-763 confirms: Contact Creation fails when only Email ID provided."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: M
+
+  - id: D-009
+    surface: create-contact-form
+    component: Contact Form
+    element: Duplicate email validation
+    layer: 4
+    category: behavior_mismatch
+    severity: minor
+    priority: P2
+    expected: "Creating a contact with a duplicate email shows appropriate error/warning message"
+    actual: "No duplicate email validation. ROM-779 confirms: Contact Creation with Duplicate Email Id has no guard."
+    evidence:
+      reference: null
+      implementation: null
+    fix_scope: M
+
+  - id: D-010
+    surface: create-contact-form
+    component: Contact Form
+    element: Lifecycle Stage placeholder
+    layer: 2
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Lifecycle Stage dropdown placeholder matches reference value"
+    actual: "Lifecycle Stage placeholder text is different. ROM-767 confirms."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: S
+
+  - id: D-011
+    surface: create-contact-form
+    component: Contact Form
+    element: Lead Status placeholder
+    layer: 2
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Lead Status dropdown placeholder matches reference value"
+    actual: "Lead Status placeholder text is different. ROM-776 confirms."
+    evidence:
+      reference: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-ref-20260303/snapshot.md"
+      implementation: "~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl-20260303/snapshot.md"
+    fix_scope: S
+
+  - id: D-012
+    surface: create-contact-form
+    component: Contact Form
+    element: Phone number info icon
+    layer: 2
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "Info icon present on phone number format popup/tooltip"
+    actual: "Info icon missing from phone number format area. ROM-774 confirms."
+    evidence:
+      reference: null
+      implementation: null
+    fix_scope: S
+
+  - id: D-013
+    surface: create-contact-form
+    component: Contact Form
+    element: Info icon popup content
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Info icon popups show content matching reference app"
+    actual: "Info icon popup context/content differs from reference. ROM-777 confirms."
+    evidence:
+      reference: null
+      implementation: null
+    fix_scope: S
+
+  - id: D-014
+    surface: create-contact-form
+    component: Contact Form
+    element: Phone number formatting/validation
+    layer: 4
+    category: behavior_mismatch
+    severity: minor
+    priority: P2
+    expected: "Invalid phone numbers handled with appropriate validation"
+    actual: "Invalid phone numbers default to US (+1) format. ROM-773 confirms."
+    evidence:
+      reference: null
+      implementation: null
+    fix_scope: M
+
+summary:
+  total_gaps: 14
+  by_severity: {critical: 0, major: 1, minor: 6, cosmetic: 7}
+  by_priority: {P0: 0, P1: 1, P2: 6, P3: 7}
+  by_fix_scope: {S: 6, M: 6, L: 2}
+  recommendation: "Fidelity improved from 45% to 62% (5 prior gaps resolved: ChoiceModal removed, 'Edit this form' link added, Address fields removed, Website URL removed, Status message removed). The remaining P1 gap is progressive disclosure (D-001), flagged as L-scope in mission exclusions. Six P2 gaps from QA reconciliation: email-only validation (ROM-763), duplicate email (ROM-779), phone formatting (ROM-773), dropdown search missing (ROM-775/768), Contact owner default (ROM-765). Seven cosmetic gaps for polish."
+
+matches:
+  - component: Entry Flow
+    note: "RESOLVED from prior delta. ChoiceModal intermediary removed. 'Create new' now opens form directly."
+  - component: "Edit this form link"
+    note: "RESOLVED from prior delta. Link now present in form header. ROM-766 can be closed."
+  - component: Address Fields
+    note: "RESOLVED from prior delta. Extra address fields (Street, City, State, Postal, Country) removed from form."
+  - component: Website URL Field
+    note: "RESOLVED from prior delta. Extra Website URL field removed from form."
+  - component: Status Message
+    note: "RESOLVED from prior delta. 'Start by entering the Contact's name, email, or both' message no longer present."
+  - component: Core Fields
+    note: "Email, First name, Last name present and in correct order."
+  - component: Button Enablement
+    note: "Create buttons enable after email + first name. Partial match (email-only should also enable per ROM-763)."
+  - component: Cancel Behavior
+    note: "Cancel dismisses immediately without confirmation. Matches reference."
+  - component: Lifecycle Stage Options
+    note: "9 lifecycle stage options match reference values exactly."
+  - component: Lead Status Options
+    note: "9 lead status options match reference values (capitalization differs)."
+
+cross_reference:
+  confirmed:
+    - gap_id: D-004
+      ticket: ROM-765
+    - gap_id: D-003
+      ticket: "ROM-775, ROM-768"
+    - gap_id: D-005
+      ticket: ROM-776
+  missed:
+    - ticket: ROM-763
+      summary: "Email-only creation validation - prior dossier did not test email-only submission flow"
+    - ticket: ROM-779
+      summary: "Duplicate email validation - prior dossier did not test duplicate submission flow"
+    - ticket: ROM-777
+      summary: "Info icon popup content mismatch - prior dossier did not capture tooltip interactions"
+    - ticket: ROM-774
+      summary: "Phone number format info icon missing - prior dossier noted type mismatch but not icon"
+    - ticket: ROM-773
+      summary: "Phone number defaulting to US format - prior dossier noted type mismatch but not validation behavior"
+    - ticket: ROM-767
+      summary: "Lifecycle stage placeholder mismatch - prior dossier matched options but not placeholder"
+  new: []

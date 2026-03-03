@@ -1,0 +1,60 @@
+# MISSION MANIFEST
+# Template: mission-manifest-v1
+---
+metadata:
+  name: "Contacts & Lists Calibration"
+  domain: contacts, lists
+  strategy: calibrate
+  epic: ROM-365
+  created: 2026-03-01T18:00:00Z
+  status: active
+
+exclusions:
+  - AI/Breeze features (record summaries, intelligence tab, AI-powered suggestions)
+  - Placeholder features documented as intentionally stubbed
+  - Timing audits (separate mission)
+  - Filter/sidebar integration into non-Contacts views (other team members own their views)
+
+scope_notes: |
+  Lists scope per Director's assignment:
+  1. Segment details slide-over panel (covered by objectLists dossier D-018) — originally described as "sidebar", clarified as the details panel
+  2. Advanced Filters — full filter builder (AND/OR, property/operator selection) — required
+  3. Object Lists management view (/objectLists) — the main lists management page
+  4. Lists CRUD + membership per ROM-365 epic tickets (ROM-366, ROM-383, ROM-393, ROM-399, ROM-405)
+  Team completed work (no overlap): Ali (ROM-649, ROM-700 - basic filters, Merged), Ian (ROM-709, ROM-708 - quick filters, Merged)
+  Director completed: ROM-632 (ADR), ROM-638 (Segments spec), ROM-738 (Core Filters)
+
+surfaces:
+  - name: "Contacts"
+    feature_ticket: null
+    sub_surfaces:
+      - contacts-list-view
+      - create-contact-form
+      - contact-detail-view
+    captured: true
+    delta_analyzed: true
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/contacts-listview-delta-20260302T1930Z.yaml
+      - memory/dossiers/contacts-create-form-delta-20260302T1945Z.yaml
+      - memory/dossiers/contacts-detail-view-delta-20260302T2130Z.yaml
+
+  - name: "Lists"
+    feature_ticket: ROM-365
+    sub_surfaces:
+      - object-lists-view
+      - advanced-filters
+    captured: true
+    delta_analyzed: true
+    fixes_applied: false
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/lists-object-lists-view-delta-20260302T2300Z.yaml
+      - memory/dossiers/lists-advanced-filters-delta-20260303T0100Z.yaml
+
+progress:
+  total_surfaces: 2
+  captured: 2
+  analyzed: 2
+  converged: 0

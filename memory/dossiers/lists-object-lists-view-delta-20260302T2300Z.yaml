@@ -1,0 +1,393 @@
+# DOSSIER — DELTA
+# Template: dossier-delta-v1
+---
+metadata:
+  domain: lists
+  surface: object-lists-view
+  timestamp: "2026-03-02T23:00:00Z"
+  strategy: calibrate
+  producer: intelligence/analysis
+  mission: "Contacts & Lists Calibration"
+  iteration: 1
+  reference_dossier: null
+
+surfaces:
+  - name: "Object Lists Management View"
+    reference_url: "https://app-na2.hubspot.com/contacts/245093720/objectLists/views/all?count=25"
+    implementation_url: "http://localhost:3002/contacts/245093720/objectLists/views/all"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/object-lists-view-ref/manifest.yaml
+      implementation: ~/.claude/agency-workspace/evidence/lists/object-lists-view-impl/manifest.yaml
+
+fidelity_score: 15
+
+gaps:
+  # ============ LAYER 1: SURFACE INVENTORY ============
+
+  - id: D-001
+    surface: object-lists-view
+    component: URL Routing
+    element: Base URL redirect
+    layer: 1
+    category: behavior_mismatch
+    severity: major
+    priority: P1
+    expected: "Navigating to /contacts/{portalId}/objectLists redirects to /contacts/{portalId}/objectLists/views/all?count=25"
+    actual: "Navigating to /contacts/{portalId}/objectLists returns 404. Must navigate to /objectLists/views/all directly."
+    evidence:
+      reference: "URL redirect observed during navigation"
+      implementation: "404 page returned on base URL"
+    fix_scope: S
+
+  # ============ LAYER 2: ELEMENT INVENTORY ============
+
+  - id: D-002
+    surface: object-lists-view
+    component: Page Header
+    element: Page title and count
+    layer: 2
+    category: content_mismatch
+    severity: minor
+    priority: P2
+    expected: "Heading 'Segments' with subtitle '3 segments' showing total count"
+    actual: "No page heading — title area is a 'Segments' dropdown button. Count shown as badge '0' on 'All segments' tab button."
+    evidence:
+      reference: "heading level=1 'Segments 3 segments'"
+      implementation: "button 'Segments' + button 'All segments 0'"
+    fix_scope: S
+
+  - id: D-003
+    surface: object-lists-view
+    component: Page Header
+    element: "What's new? button"
+    layer: 2
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "'What's new?' button present in header toolbar"
+    actual: "Not present"
+    evidence:
+      reference: "button 'What's new?'"
+      implementation: "Not found"
+    fix_scope: S
+
+  - id: D-004
+    surface: object-lists-view
+    component: Page Header
+    element: Import link
+    layer: 2
+    category: missing
+    severity: major
+    priority: P1
+    expected: "Import link in header toolbar navigating to /import/{portalId}"
+    actual: "Not present"
+    evidence:
+      reference: "link 'Import' url='https://app-na2.hubspot.com/import/245093720'"
+      implementation: "Not found"
+    fix_scope: M
+
+  - id: D-005
+    surface: object-lists-view
+    component: Page Header
+    element: Quick create dropdown
+    layer: 2
+    category: missing
+    severity: major
+    priority: P1
+    expected: "'Quick create' dropdown with options: Contacts, Companies, Deals, Tickets, Lookalikes AI (disabled)"
+    actual: "Not present. Implementation has 'Create segment' dropdown with only 'Create new' option."
+    evidence:
+      reference: "button 'Quick create' with 5 menu items"
+      implementation: "Not found — 'Create segment' dropdown has 1 generic option"
+    fix_scope: M
+
+  - id: D-006
+    surface: object-lists-view
+    component: Page Header
+    element: Create segment button
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "'Create segment' as a primary link button navigating to /objectLists/create"
+    actual: "'Create segment' is a dropdown button with a single 'Create new' menu item"
+    evidence:
+      reference: "link 'Create segment' url='/contacts/245093720/objectLists/create'"
+      implementation: "button 'Create segment' -> dropdown -> menuitem 'Create new'"
+    fix_scope: S
+
+  - id: D-007
+    surface: object-lists-view
+    component: Navigation Tabs
+    element: Intro/Manage/Analyze tabs
+    layer: 2
+    category: missing
+    severity: major
+    priority: P1
+    expected: "Three navigation tabs: Intro, Manage, Analyze"
+    actual: "Not present"
+    evidence:
+      reference: "navigation with buttons: Intro, Manage, Analyze"
+      implementation: "Not found"
+    fix_scope: M
+
+  - id: D-008
+    surface: object-lists-view
+    component: View Tabs
+    element: Draggable view tabs
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Draggable tab bar with 'All segments', 'Unused segments', 'Recently deleted' tabs, plus 'Add view (3/50)' button and 'All views' link"
+    actual: "Not present. Only a single 'All segments' button with badge '0' exists."
+    evidence:
+      reference: "tablist with 3 draggable buttons + 'Add view' + 'All views' link"
+      implementation: "Single button 'All segments 0'"
+    fix_scope: L
+
+  - id: D-009
+    surface: object-lists-view
+    component: Filter Bar
+    element: All creators filter
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Dropdown filter 'All creators' with search and multi-select checkboxes (5 users)"
+    actual: "Not present"
+    evidence:
+      reference: "button 'All creators' with combobox search + listbox of 5 checkboxes"
+      implementation: "Not found"
+    fix_scope: L
+
+  - id: D-010
+    surface: object-lists-view
+    component: Filter Bar
+    element: All types filter
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Dropdown filter 'All types' with search and options: All types, Active, Static"
+    actual: "Not present"
+    evidence:
+      reference: "button 'All types' with combobox search + 3 options"
+      implementation: "Not found"
+    fix_scope: L
+
+  - id: D-011
+    surface: object-lists-view
+    component: Filter Bar
+    element: All objects filter
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Dropdown filter 'All objects' with search and 12 options (All objects, Standard objects, Cart/Company/Contact/Deal/Invoice/Order/Payment Link/Project/Quote/Ticket segments)"
+    actual: "Not present"
+    evidence:
+      reference: "button 'All objects' with combobox search + 12 options"
+      implementation: "Not found"
+    fix_scope: L
+
+  - id: D-012
+    surface: object-lists-view
+    component: Filter Bar
+    element: Used in filter
+    layer: 2
+    category: missing
+    severity: major
+    priority: P1
+    expected: "Dropdown filter 'Used in' with search and 24 checkbox options (Ads, Blogs, Bots, Campaigns, etc.)"
+    actual: "Not present"
+    evidence:
+      reference: "button 'Used in' with combobox search + 24 checkboxes + Unassigned"
+      implementation: "Not found"
+    fix_scope: L
+
+  - id: D-013
+    surface: object-lists-view
+    component: Filter Bar
+    element: More filter button
+    layer: 2
+    category: behavior_mismatch
+    severity: minor
+    priority: P2
+    expected: "'More' button in filter bar (presumably for additional filter options)"
+    actual: "'More' button exists but clicking produces no dropdown — non-functional"
+    evidence:
+      reference: "button 'More' in filter bar"
+      implementation: "button 'More' present but no popup on click"
+    fix_scope: S
+
+  - id: D-014
+    surface: object-lists-view
+    component: Table Toolbar
+    element: Actions dropdown
+    layer: 2
+    category: missing
+    severity: major
+    priority: P1
+    expected: "'Actions' dropdown with 'Export segments (disabled)' and 'Edit columns'"
+    actual: "Not present. Implementation has a non-functional 'More actions' button in the header area."
+    evidence:
+      reference: "button 'Actions' -> Export segments, Edit columns"
+      implementation: "'More actions' button exists but produces no dropdown"
+    fix_scope: M
+
+  - id: D-015
+    surface: object-lists-view
+    component: Table
+    element: Data table
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Full data table with 9 columns (checkbox, Name, Size, Type, Object, Last updated, Creator, Folder, Used in Count) and sortable column headers"
+    actual: "No table rendered. Shows empty state: 'No matches for the current filters.' No columns, no rows."
+    evidence:
+      reference: "table with 9 columnheaders, 3 data rows"
+      implementation: "Empty state message only"
+    fix_scope: L
+
+  - id: D-016
+    surface: object-lists-view
+    component: Table
+    element: Row hover actions
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "On row hover: Edit button, Details button, More dropdown menu (Clone, Export, Move to folder, Compare, Create lookalike, Random sample, Split segment, Set notifications, View performance, Delete)"
+    actual: "No rows exist to hover — entire table missing"
+    evidence:
+      reference: "Row hover reveals Edit, Details, More with 12 menu items"
+      implementation: "Not applicable — no rows"
+    fix_scope: L
+
+  - id: D-017
+    surface: object-lists-view
+    component: Table
+    element: Row selection and bulk actions
+    layer: 2
+    category: missing
+    severity: major
+    priority: P1
+    expected: "Row checkboxes with bulk selection toolbar showing 'N selected', Edit, Delete, Move to folder buttons"
+    actual: "Not present — no table rows"
+    evidence:
+      reference: "checkboxes per row, bulk toolbar with 3 action buttons"
+      implementation: "Not applicable — no rows"
+    fix_scope: L
+
+  - id: D-018
+    surface: object-lists-view
+    component: Details Panel
+    element: Segment details side panel
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Details panel with 3 tabs (Details, Filters, Used in). Details tab shows: segment name (editable), description (editable with AI generate), segment type, object type, count, last contact added, 7-day change, performance link, created/updated timestamps, API segment IDs with copy buttons."
+    actual: "Not present — no rows to trigger details panel"
+    evidence:
+      reference: "Slide-over panel with rich segment metadata and 3 tabs"
+      implementation: "Not applicable — no rows to click Details on"
+    fix_scope: L
+
+  # ============ LAYER 2: EXTRA ELEMENTS (Implementation-only) ============
+
+  - id: D-019
+    surface: object-lists-view
+    component: Toolbar
+    element: Table view dropdown
+    layer: 2
+    category: state_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "No 'Table view' selector in reference — the view is always table"
+    actual: "'Table view' dropdown button present (clicked but no menu appeared)"
+    evidence:
+      reference: "Not present"
+      implementation: "button 'Table view' with dropdown chevron"
+    fix_scope: S
+
+  - id: D-020
+    surface: object-lists-view
+    component: Toolbar
+    element: Filters toggle
+    layer: 2
+    category: state_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Filters are always visible in filter bar — no toggle"
+    actual: "'Filters' toggle button (expanded) present"
+    evidence:
+      reference: "Filters inline in filter bar, no toggle"
+      implementation: "button 'Filters' [expanded] toggle"
+    fix_scope: S
+
+  - id: D-021
+    surface: object-lists-view
+    component: Toolbar
+    element: Copy button
+    layer: 2
+    category: state_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "No Copy button in reference toolbar"
+    actual: "'Copy' button present in toolbar"
+    evidence:
+      reference: "Not present"
+      implementation: "button 'Copy'"
+    fix_scope: S
+
+  - id: D-022
+    surface: object-lists-view
+    component: Toolbar
+    element: Save button
+    layer: 2
+    category: state_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "No Save button in reference toolbar"
+    actual: "'Save' button (disabled) present in toolbar"
+    evidence:
+      reference: "Not present"
+      implementation: "button 'Save' [disabled]"
+    fix_scope: S
+
+  - id: D-023
+    surface: object-lists-view
+    component: Search
+    element: Search placeholder text
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Placeholder text: 'Search segments'"
+    actual: "Placeholder text: 'Search'"
+    evidence:
+      reference: "searchbox 'Search segments'"
+      implementation: "textbox placeholder='Search'"
+    fix_scope: S
+
+summary:
+  total_gaps: 23
+  by_severity: {critical: 7, major: 6, minor: 3, cosmetic: 7}
+  by_priority: {P0: 7, P1: 6, P2: 3, P3: 7}
+  by_fix_scope: {S: 8, M: 4, L: 11}
+  recommendation: "The Object Lists Management view is in early scaffolding state. The basic page shell exists (sidebar, header, search, pagination, filter region) but the core data table, filter dropdowns, view tabs, navigation tabs, row actions, details panel, and segment data are all missing. This surface requires a substantial build-out covering at minimum the data table with columns, filter dropdowns (creators, types, objects, used-in), view tabs (all/unused/deleted), and row-level actions before it can be considered functional."
+
+matches:
+  - component: "Left Sidebar"
+    note: "Sidebar navigation matches reference structure — same sections present (CRM, Marketing, Content, Sales, Commerce, Service, Data Management, Automation, Reporting)"
+  - component: "Global Header"
+    note: "Header bar structure is present with search, create new, help, calls, marketplace, settings, notifications. Minor label differences (Knowledge base vs Help)."
+  - component: "Pagination"
+    note: "Pagination footer matches reference pattern — Prev/Next buttons, page number, per-page selector (25/50/100). Reference has similar disabled state for single-page results."
+  - component: "Filter Region"
+    note: "A filter region exists with 'More' and 'Advanced filters' buttons. Structurally similar placement to reference. However, no actual filter dropdowns are populated."
+  - component: "Search Input"
+    note: "Search textbox is present in the correct location relative to the table area."

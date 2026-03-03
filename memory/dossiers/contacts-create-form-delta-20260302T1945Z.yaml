@@ -1,0 +1,293 @@
+# DOSSIER — DELTA
+# Template: dossier-delta-v1
+---
+metadata:
+  domain: contacts
+  surface: create-contact-form
+  timestamp: "2026-03-02T19:45:00Z"
+  strategy: calibrate
+  producer: intelligence/analysis
+  mission: contacts-lists-calibration
+  iteration: 1
+  reference_dossier: null
+
+surfaces:
+  - name: Create Contact Form
+    reference_url: "https://app-na2.hubspot.com/object-builder/245093720/0-1/embed?"
+    implementation_url: "http://localhost:3002/contacts/245093720/objects/0-1/views/all/list (overlay)"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/manifest.yaml
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/manifest.yaml
+
+fidelity_score: 45
+
+gaps:
+  # --- Entry Flow (Layer 4 - Behavior) ---
+  - id: D-001
+    surface: create-contact-form
+    component: Entry Flow
+    element: Choice Modal
+    layer: 4
+    category: behavior_mismatch
+    severity: major
+    priority: P1
+    expected: "Clicking 'Create new' opens the create contact form directly"
+    actual: "Clicking 'Create new' shows a 'Create your first contact' choice modal with 'Help me get started' and 'I'll set up myself' options. User must click 'I'll set up myself' to reach the actual form."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: M
+
+  # --- Progressive Disclosure (Layer 4 - Behavior) ---
+  - id: D-002
+    surface: create-contact-form
+    component: Contact Form
+    element: Field Visibility
+    layer: 4
+    category: behavior_mismatch
+    severity: major
+    priority: P1
+    expected: "Only Email, First name, Last name visible initially. Additional fields (Contact owner, Job title, Phone number, Lifecycle stage, Lead status, Marketing checkbox) appear after email entry (progressive disclosure)."
+    actual: "ALL fields visible immediately on form open, including Contact owner, Job title, Phone number, Lifecycle stage, Lead status, Address fields, Website URL, and Marketing checkbox. No progressive disclosure."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: L
+
+  # --- Missing/Extra Elements (Layer 2) ---
+  - id: D-003
+    surface: create-contact-form
+    component: Form Header
+    element: "Edit this form link"
+    layer: 2
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "'Edit this form' link present in header, opens object-manager-settings in new window"
+    actual: "No 'Edit this form' link"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-004
+    surface: create-contact-form
+    component: Contact Form
+    element: Address Fields
+    layer: 1
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "No address fields on the create contact form"
+    actual: "5 address fields present: Street address, City, State/Region, Postal code, Country/Region. These are NOT in the reference form."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-005
+    surface: create-contact-form
+    component: Contact Form
+    element: Website URL Field
+    layer: 1
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "No Website URL field on the create contact form"
+    actual: "Website URL textbox present with placeholder 'https://example.com'. NOT in reference."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: S
+
+  # --- Type Mismatches (Layer 2) ---
+  - id: D-006
+    surface: create-contact-form
+    component: Contact Form
+    element: Phone Number Field
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "Phone number renders as a multiline textbox"
+    actual: "Phone number renders as a button element (role='button')"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/interactions/form-fields.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/interactions/form-fields.md
+    fix_scope: M
+
+  - id: D-007
+    surface: create-contact-form
+    component: Contact Form
+    element: Form Container
+    layer: 1
+    category: type_mismatch
+    severity: minor
+    priority: P3
+    expected: "Form renders inside an iframe (object-builder embed URL)"
+    actual: "Form renders as a native dialog element (role='dialog')"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: L
+
+  - id: D-008
+    surface: create-contact-form
+    component: Contact Form
+    element: Dropdown Implementation
+    layer: 2
+    category: type_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Dropdowns use button with haspopup='menu' opening a searchable combobox with autocomplete='list'"
+    actual: "Dropdowns use combobox role directly, opening a listbox without search input"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/interactions/form-fields.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/interactions/form-fields.md
+    fix_scope: M
+
+  # --- Content Mismatches (Layer 2) ---
+  - id: D-009
+    surface: create-contact-form
+    component: Contact Form
+    element: Contact Owner Default
+    layer: 3
+    category: state_mismatch
+    severity: minor
+    priority: P2
+    expected: "Contact owner pre-populated with logged-in user name ('Callum Foster')"
+    actual: "Contact owner shows '---' as default. No user data loaded."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/interactions/form-fields.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/interactions/form-fields.md
+    fix_scope: M
+
+  - id: D-010
+    surface: create-contact-form
+    component: Contact Form
+    element: Contact Owner Options
+    layer: 2
+    category: content_mismatch
+    severity: minor
+    priority: P2
+    expected: "Contact owner dropdown shows 'No owner' option + async-loaded list of users"
+    actual: "Contact owner dropdown shows only '---' (1 option). No 'No owner' option. No user list."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/interactions/form-fields.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/interactions/form-fields.md
+    fix_scope: M
+
+  - id: D-011
+    surface: create-contact-form
+    component: Contact Form
+    element: Lead Status Capitalization
+    layer: 2
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Lead status options use sentence case: 'In progress', 'Open deal', 'Attempted to contact', 'Bad timing'"
+    actual: "Lead status options use title case: 'In Progress', 'Open Deal', 'Attempted to Contact', 'Bad Timing'"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/interactions/form-fields.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/interactions/form-fields.md
+    fix_scope: S
+
+  - id: D-012
+    surface: create-contact-form
+    component: Contact Form
+    element: Status Message
+    layer: 1
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "No status message on the form"
+    actual: "Status message: 'Start by entering the Contact's name, email, or both.' displayed below core fields. Disappears after email entry."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: S
+
+  # --- Marketing Section ---
+  - id: D-013
+    surface: create-contact-form
+    component: Marketing Section
+    element: Section Heading Element
+    layer: 2
+    category: type_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Marketing section uses h6 heading: 'Allow your team to market to this Contact'"
+    actual: "Marketing section uses paragraph element instead of h6 heading"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-014
+    surface: create-contact-form
+    component: Marketing Section
+    element: Duplicate Checkboxes
+    layer: 2
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "Single checkbox for marketing contact"
+    actual: "Two checkbox elements rendered for marketing contact (possible implementation bug)"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: S
+
+  # --- Close/Cancel ---
+  - id: D-015
+    surface: create-contact-form
+    component: Action Buttons
+    element: Duplicate Close Button
+    layer: 2
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "Close (X) button in header only. Cancel button at bottom."
+    actual: "Close (X) button at header AND a separate Close button at bottom of dialog, in addition to Cancel button."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-016
+    surface: create-contact-form
+    component: Contact Form
+    element: First Name / Last Name Field Type
+    layer: 2
+    category: type_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "First name and Last name are multiline textboxes"
+    actual: "First name and Last name are single-line textboxes"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/contacts/create-contact-form/interactions/form-fields.md
+      implementation: ~/.claude/agency-workspace/evidence/contacts/create-contact-form-impl/interactions/form-fields.md
+    fix_scope: S
+
+summary:
+  total_gaps: 16
+  by_severity: {critical: 0, major: 2, minor: 7, cosmetic: 7}
+  by_priority: {P0: 0, P1: 2, P2: 6, P3: 8}
+  by_fix_scope: {S: 7, M: 6, L: 3}
+  recommendation: "P1 gaps are the most impactful: remove the Choice Modal intermediary (D-001) and implement progressive disclosure (D-002). P2 items (Contact owner data, phone number field type, address/URL field removal, 'Edit this form' link) improve form fidelity. P3 cosmetic items (capitalization, heading level, duplicate checkbox/close) are polish."
+
+matches:
+  - component: Form Header
+    note: "'Create Contact' h2 heading matches reference."
+  - component: Core Fields
+    note: "Email, First name, Last name present and in correct order."
+  - component: Button Enablement
+    note: "Create buttons enable after email + first name. Matches reference logic."
+  - component: Cancel Behavior
+    note: "Cancel dismisses immediately without confirmation. Matches reference."
+  - component: Lifecycle Stage Options
+    note: "9 lifecycle stage options match reference values exactly."
+  - component: Lead Status Options
+    note: "9 lead status options match reference values (capitalization differs)."
+
+cross_reference: null

@@ -1,0 +1,398 @@
+# DOSSIER -- DELTA
+# Template: dossier-delta-v1
+---
+metadata:
+  domain: contacts
+  timestamp: "2026-03-01T23:27:00Z"
+  strategy: calibrate
+  iteration: 1
+  producer: intelligence/analysis
+  mission: contacts-lists-calibration
+  surface: "Contacts List View"
+
+surfaces:
+  - name: "Contacts List View"
+    reference_url: "https://app-na2.hubspot.com/contacts/245093720/objects/0-1/views/all/list"
+    implementation_url: "http://localhost:3002/contacts/245093720/objects/0-1/views/all/list"
+    evidence:
+      reference: workspace/evidence/contacts/reference/dossier-reference.md
+      implementation: workspace/evidence/contacts/implementation/dossier-implementation.md
+      delta: workspace/evidence/contacts/delta-dossier.md
+
+fidelity_score: 35  # percent (structural present, behavioral mostly absent)
+
+gaps:
+  # ===================================================================
+  # P0 -- Ship-blocking (core workflows broken)
+  # ===================================================================
+
+  - id: CLV-001
+    surface: "Contacts List View"
+    component: "Toolbar"
+    element: "Search"
+    layer: 4  # interaction behavior
+    category: behavior_mismatch
+    severity: critical
+    priority: P0
+    expected: >
+      Search box filters table data server-side, updates URL with ?query= param,
+      debounced input. Table shows only matching records.
+    actual: >
+      Search box accepts text, shows "Clear search" button, but does NOT filter
+      table data. All 5 records remain visible. URL does not update. Non-functional.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/search.md
+      implementation: workspace/evidence/contacts/implementation/interactions/search.md
+    fix_scope: M
+
+  - id: CLV-002
+    surface: "Contacts List View"
+    component: "Bulk Actions"
+    element: "Entire toolbar"
+    layer: 1  # surface inventory (missing)
+    category: missing
+    severity: critical
+    priority: P0
+    expected: >
+      Selecting a row checkbox reveals a bulk action toolbar with: selection counter
+      "N contact(s) selected", Assign, Edit, Delete, Review Associations, Create tasks,
+      Enroll in sequence, More, Close. 10 action buttons total.
+    actual: >
+      Selecting a row checkbox checks the box but produces NO bulk action toolbar.
+      No selection counter, no action buttons, no toolbar whatsoever.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/row-selection-bulk-actions.md
+      implementation: workspace/evidence/contacts/implementation/interactions/row-selection.md
+    fix_scope: L
+
+  - id: CLV-003
+    surface: "Contacts List View"
+    component: "Filter Bar"
+    element: "Quick filters"
+    layer: 1  # surface inventory (missing)
+    category: missing
+    severity: critical
+    priority: P0
+    expected: >
+      Filter bar shows quick filter buttons: Contact owner (searchable checkbox list,
+      multi-select), Create date (34 date presets, single-select), Last activity date
+      (same as Create date), Lead status (searchable checkbox list, 8 values).
+      Plus "More" and "Advanced filters" buttons.
+    actual: >
+      Filter bar shows generic "Add filter" button opening a property-picker combobox
+      with only 5 properties (Create Date, Email, First Name, Lead Status, Phone Number).
+      No quick filter buttons, no specialized filter UIs, no "More" or "Advanced filters".
+      Contact owner and Last activity date not even in the property list.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/contact-owner-filter.md
+      implementation: workspace/evidence/contacts/implementation/interactions/add-filter.md
+    fix_scope: L
+
+  # ===================================================================
+  # P1 -- High (significant feature gaps)
+  # ===================================================================
+
+  - id: CLV-004
+    surface: "Contacts List View"
+    component: "Table Header"
+    element: "Column header sort"
+    layer: 4  # interaction behavior
+    category: behavior_mismatch
+    severity: major
+    priority: P1
+    expected: >
+      Clicking a column header toggles sort ascending/descending. Live region
+      announces sort state. Sort indicator visible on active column. CREATE DATE
+      default descending.
+    actual: >
+      Clicking column header does nothing. No sort occurs, no indicator, no
+      live region announcement. Headers are clickable buttons with no effect.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/column-header-context-menu.md
+      implementation: workspace/evidence/contacts/implementation/interactions/column-header-click.md
+    fix_scope: M
+
+  - id: CLV-005
+    surface: "Contacts List View"
+    component: "Table Header"
+    element: "Column context menus"
+    layer: 1  # missing
+    category: missing
+    severity: major
+    priority: P1
+    expected: >
+      Each column header has "Open context menu" button with 6 options: Sort ascending,
+      Sort descending, Set up smart property (disabled), View column insights,
+      Freeze column, Add column.
+    actual: >
+      No context menu button on any column header. No context menu options.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/column-header-context-menu.md
+      implementation: workspace/evidence/contacts/implementation/interactions/column-header-click.md
+    fix_scope: M
+
+  - id: CLV-006
+    surface: "Contacts List View"
+    component: "Table Row"
+    element: "Name as link"
+    layer: 3  # element state (type)
+    category: type_mismatch
+    severity: major
+    priority: P1
+    expected: >
+      Name cell is a link navigating to contact record detail page.
+    actual: >
+      Name cell is a button with no navigation. Does not link to record detail.
+    fix_scope: S
+
+  - id: CLV-007
+    surface: "Contacts List View"
+    component: "Table Row"
+    element: "Email as mailto"
+    layer: 3
+    category: type_mismatch
+    severity: major
+    priority: P1
+    expected: >
+      Email cell is a link with mailto: href.
+    actual: >
+      Email cell is a button with no mailto functionality.
+    fix_scope: S
+
+  - id: CLV-008
+    surface: "Contacts List View"
+    component: "Table Row"
+    element: "Preview button"
+    layer: 1  # missing
+    category: missing
+    severity: moderate
+    priority: P1
+    expected: >
+      Each row has a Preview button for quick-view of contact details.
+    actual: >
+      No Preview button exists on any row.
+    fix_scope: M
+
+  - id: CLV-009
+    surface: "Contacts List View"
+    component: "Toolbar"
+    element: "Sort property list"
+    layer: 2  # element inventory
+    category: content_mismatch
+    severity: major
+    priority: P1
+    expected: >
+      Sort combobox shows 219+ sortable properties organized by category groups
+      (Contact information, Contact activity, etc.) with lazy "Load more" loading
+      and search filtering.
+    actual: >
+      Sort combobox shows only 7 properties (matching visible columns) in a flat
+      list. No category groups, no lazy loading, no search in the property list.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/sort.md
+      implementation: workspace/evidence/contacts/implementation/interactions/sort.md
+    fix_scope: M
+
+  # ===================================================================
+  # P2 -- Medium (completeness)
+  # ===================================================================
+
+  - id: CLV-010
+    surface: "Contacts List View"
+    component: "Table Header"
+    element: "Missing columns"
+    layer: 2  # element inventory
+    category: missing
+    severity: moderate
+    priority: P2
+    expected: >
+      15 columns: NAME, EMAIL, PHONE NUMBER, CONTACT OWNER, PRIMARY COMPANY,
+      LAST ACTIVITY DATE, LEAD STATUS, MARKETING CONTACT STATUS, CREATE DATE,
+      FIRST CONVERSION DATE, CURRENTLY IN SEQUENCE, MEMBERSHIP NOTES,
+      FIRST CLOSED ORDER ID, CAMPAIGN OF LAST BOOKING, DATE OF LAST MEETING.
+    actual: >
+      7 columns: NAME, EMAIL, PHONE NUMBER, CONTACT OWNER, LAST ACTIVITY DATE,
+      LEAD STATUS, CREATE DATE. Missing 8 columns.
+    fix_scope: M
+
+  - id: CLV-011
+    surface: "Contacts List View"
+    component: "View Tabs"
+    element: "Object Type Selector"
+    layer: 2  # element inventory
+    category: content_mismatch
+    severity: moderate
+    priority: P2
+    expected: >
+      Searchable combobox dropdown with 15 object types: Calls, Carts, Companies,
+      Contacts, Deals, Emails, Invoices, Marketing events, Notes, Orders, Products,
+      Projects, Quotes, Subscriptions, Tickets.
+    actual: >
+      Plain menu dropdown with 2 items: Contacts, Companies. No search.
+      Missing 13 object types.
+    evidence:
+      reference: workspace/evidence/contacts/reference/interactions/object-type-selector.md
+      implementation: workspace/evidence/contacts/implementation/interactions/object-type-selector.md
+    fix_scope: M
+
+  - id: CLV-012
+    surface: "Contacts List View"
+    component: "View Tabs"
+    element: "Record count on tabs"
+    layer: 2
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Tab shows 'All contacts 21' with record count."
+    actual: "Tab shows 'All contacts' without count."
+    fix_scope: S
+
+  - id: CLV-013
+    surface: "Contacts List View"
+    component: "View Tabs"
+    element: "Drag-to-reorder"
+    layer: 4
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Tabs are draggable for reordering."
+    actual: "Tabs are not draggable."
+    fix_scope: M
+
+  - id: CLV-014
+    surface: "Contacts List View"
+    component: "Table Row"
+    element: "Contact initials"
+    layer: 3
+    category: content_mismatch
+    severity: minor
+    priority: P2
+    expected: "Avatar shows actual contact initials (e.g., 'ED' for Eve Davis)."
+    actual: "Avatar always shows 'HS' for all contacts."
+    fix_scope: S
+
+  - id: CLV-015
+    surface: "Contacts List View"
+    component: "Toolbar"
+    element: "Open Settings Sidebar"
+    layer: 1
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Open Settings Sidebar button in toolbar."
+    actual: "Button missing entirely."
+    fix_scope: S
+
+  # ===================================================================
+  # P3 -- Low (polish)
+  # ===================================================================
+
+  - id: CLV-016
+    surface: "Contacts List View"
+    component: "Pagination"
+    element: "Button labels"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "'Previous page'/'Next page', 'You are currently on Page 1'"
+    actual: "'Prev'/'Next', '1'"
+    fix_scope: S
+
+  - id: CLV-017
+    surface: "Contacts List View"
+    component: "Table Row"
+    element: "Checkbox label"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "'Select row'"
+    actual: "'Select {FirstName}' (e.g., 'Select Eve')"
+    fix_scope: S
+
+  - id: CLV-018
+    surface: "Contacts List View"
+    component: "Global Header"
+    element: "Search role"
+    layer: 3
+    category: type_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "searchbox role"
+    actual: "textbox role"
+    fix_scope: S
+
+  - id: CLV-019
+    surface: "Contacts List View"
+    component: "View Tabs"
+    element: "Add view button label"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "'Create or add existing view'"
+    actual: "'Add or create view'"
+    fix_scope: S
+
+  - id: CLV-020
+    surface: "Contacts List View"
+    component: "View Tabs"
+    element: "Remove button visibility"
+    layer: 4
+    category: behavior_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Remove buttons hidden until hover/interaction."
+    actual: "Remove buttons always visible."
+    fix_scope: S
+
+  - id: CLV-021
+    surface: "Contacts List View"
+    component: "Toolbar"
+    element: "Export enabled state"
+    layer: 3
+    category: behavior_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Export disabled when no selection."
+    actual: "Export always enabled."
+    fix_scope: S
+
+summary:
+  total_gaps: 21
+  by_priority:
+    P0: 3   # Search, Bulk Actions, Quick Filters
+    P1: 6   # Column sort, Context menus, Name link, Email mailto, Preview, Sort properties
+    P2: 6   # Missing columns, Object types, Record count, Drag tabs, Initials, Settings sidebar
+    P3: 6   # Labels, Checkbox label, Search role, Button label, Remove visibility, Export state
+  by_category:
+    missing: 10
+    behavior_mismatch: 5
+    type_mismatch: 3
+    content_mismatch: 6
+    cosmetic: 0  # (cosmetic items categorized by their primary category above)
+  by_fix_scope:
+    S: 9   # single file
+    M: 9   # multi-file
+    L: 3   # large (bulk actions, filter system, filter UIs)
+  recommendation: >
+    P0 gaps are ship-blocking: Search is non-functional, Bulk Actions are entirely
+    missing, and the Filter Bar uses a completely different paradigm from reference.
+    Recommend Production targets P0 in iteration 1, P1 in iteration 2. P2/P3 can
+    be batched. The filter system (CLV-003) is the largest single gap requiring
+    new component development (quick filter buttons, specialized filter UIs for
+    checkbox lists and date presets).
+
+matches:
+  # Components that match reference well
+  - component: "Add contacts menu"
+    note: "Structure matches exactly: same 2 items (Create new, Import)"
+  - component: "Per-page selector"
+    note: "Same 3 options (25, 50, 100), same default (25)"
+  - component: "Sort dialog structure"
+    note: "Same pattern: heading + combobox + direction toggle"
+  - component: "View tabs structure"
+    note: "Same pattern: active tab + options menu + add view button"
+  - component: "Left sidebar"
+    note: "12/13 items match, structure correct"

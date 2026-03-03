@@ -1,0 +1,136 @@
+# MISSION MANIFEST
+# Template: mission-manifest-v1
+---
+metadata:
+  name: "Contacts Comprehensive"
+  domain: [contacts]
+  strategy: calibrate
+  scope_doc: memory/project/scope.csv
+  scope_areas: [Contacts]
+  created: 2026-03-03T04:35:00Z
+  status: complete
+  completed: 2026-03-03T05:58:00Z
+
+objectives:
+  - Close all remaining fidelity gaps across all Contacts surfaces vs reference app
+  - Reconcile all open QA tickets against fresh intelligence findings
+  - Re-evaluate prior dossier findings — anything QA says is still broken gets re-assessed
+
+exclusions:
+  - AI/Breeze features
+  - Shared shell components (sidebar nav, global header, account section)
+  - Progressive disclosure (L-scope architecture)
+  - iframe vs dialog pattern (L-scope architecture)
+  - About tab layout redesign (L-scope architecture)
+  - ROM-764 (popup vs drawer — assigned to Ian)
+
+overrides: []
+
+operations:
+  - id: op-1
+    type: fix
+    branch: feature/contacts-comprehensive-op1
+    pr: 272
+    pr_url: https://github.com/g2i-ai/hubshot/pull/272
+    status: merged
+    gaps_addressed: 29
+    note: "Intel sweep found 31 gaps across 3 surfaces (2 excluded). Production shipped fixes. PR merged to dev."
+  - id: op-1-cursorbot
+    type: fix
+    branch: fix/contacts-comprehensive-cursorbot
+    pr: 273
+    pr_url: https://github.com/g2i-ai/hubshot/pull/273
+    status: merged
+    note: "CursorBot follow-up: race condition guard, address field order, duplicate email search limit."
+
+surfaces:
+  - name: "Contacts List View"
+    sub_surfaces: [contacts-list-view]
+    captured: true
+    delta_analyzed: true
+    fixes_applied: true
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/contacts-listview-delta-20260301T2327Z.yaml
+      - memory/dossiers/contacts-listview-delta-20260302T1930Z.yaml
+      - memory/dossiers/contacts-convergence-20260302T2030Z.yaml
+      - memory/dossiers/contacts-convergence-20260302T2330Z.yaml
+    note: "Fixes shipped (PR #272 + #273). Convergence verification skipped — mission closed per Director."
+
+  - name: "Create Contact Form"
+    sub_surfaces: [create-contact-form]
+    captured: true
+    delta_analyzed: true
+    fixes_applied: true
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/contacts-delta-20260301T2100Z.yaml
+      - memory/dossiers/contacts-create-form-delta-20260302T1945Z.yaml
+    note: "Fixes shipped (PR #272 + #273). All 5 QA bugs addressed (ROM-763, -765, -766, -772, -779). Convergence verification skipped."
+
+  - name: "Contact Detail View"
+    sub_surfaces: [contact-detail-view]
+    captured: true
+    delta_analyzed: true
+    fixes_applied: true
+    convergence_verified: false
+    dossier_chain:
+      - memory/dossiers/contacts-detail-view-delta-20260302T2130Z.yaml
+    note: "Fixes shipped (PR #272 + #273). Address field order corrected. Convergence verification skipped."
+
+prior_intelligence:
+  note: "5 delta + 2 convergence dossiers from Contacts Calibration mission (complete). 49 gaps resolved across 3 ops. Chart at v3 with 4 surveyed Contacts nodes."
+  dossier_chain:
+    - memory/dossiers/contacts-listview-delta-20260301T2327Z.yaml
+    - memory/dossiers/contacts-listview-delta-20260302T1930Z.yaml
+    - memory/dossiers/contacts-delta-20260301T2100Z.yaml
+    - memory/dossiers/contacts-create-form-delta-20260302T1945Z.yaml
+    - memory/dossiers/contacts-detail-view-delta-20260302T2130Z.yaml
+    - memory/dossiers/contacts-convergence-20260302T2030Z.yaml
+    - memory/dossiers/contacts-convergence-20260302T2330Z.yaml
+  chart: memory/chart.yaml
+
+discovery:
+  method: "scope-doc + linear-query (epic ROM-6 children + Bug label)"
+  note: "QA tickets discovered under ROM-7 (Creating Contacts). ROM-764 excluded (assigned to Ian). Bug statuses remain Triage until Intel reconciliation confirms scope."
+
+qa_tickets:
+  in_scope:
+    - ticket: ROM-763
+      title: "Contact Creation Fails When Only Email ID is Provided"
+      reconciliation: "New — validation logic gap, not in prior dossiers"
+    - ticket: ROM-765
+      title: "Contact owner should be pre-populated"
+      reconciliation: "Likely shipped (CF-D-009). Needs verification on latest code."
+    - ticket: ROM-766
+      title: "Edit this form link is missing"
+      reconciliation: "Likely shipped (CF-D-003). Needs verification on latest code."
+    - ticket: ROM-772
+      title: "Contact Creation Overlay text visible only after scrolling"
+      reconciliation: "New — layout/scroll issue, not in prior dossiers"
+    - ticket: ROM-779
+      title: "Contact Creation with Duplicate Email Id"
+      reconciliation: "New — no duplicate validation, not in prior dossiers"
+  out_of_scope:
+    - ticket: ROM-764
+      title: "Create Contact Opens Popup Instead of Drawer"
+      reason: "Assigned to Ian Goodman"
+
+linear_tickets:
+  epic: ROM-6
+  features:
+    - ROM-7   # Creating Contacts
+    - ROM-29  # Viewing Contacts
+    - ROM-46  # Editing Contacts
+    - ROM-60  # Deleting Contacts
+    - ROM-66  # Contact Filtering and Search
+    - ROM-79  # Contact Sorting
+    - ROM-85  # Contact Column Customization
+
+progress:
+  total_surfaces: 3
+  captured: 3
+  analyzed: 3
+  fixes_applied: 3
+  converged: 0
+  note: "Convergence verification skipped — mission closed per Director directive."

@@ -1,0 +1,109 @@
+# MISSION MANIFEST
+# Template: mission-manifest-v1
+---
+metadata:
+  name: "Contacts Calibration"
+  domain: [contacts]
+  strategy: calibrate
+  scope_doc: memory/project/scope.csv
+  scope_areas: [Contacts]
+  created: 2026-03-02T19:00:00Z
+  status: complete
+  completed: 2026-03-03T02:10:00Z
+
+objectives:
+  - Close fidelity gaps between reference app and HubShot for all Contacts surfaces
+  - Build shared filter patterns reusable by team on other views
+
+exclusions:
+  - Lists and segments (separate future mission)
+  - L-scope architecture changes (progressive disclosure, iframe vs dialog, About tab layout redesign)
+  - Shared shell gaps (sidebar nav, account section, global toolbar items)
+  - AI/Breeze features
+
+overrides:
+  # Items listed here are IN SCOPE regardless of size estimates.
+  # Production MUST NOT exclude these during Assay scope filtering.
+  # Authority: Director directive, confirmed by team lead.
+  - id: LV-D-010
+    element: "Quick Filters"
+    reason: "Director directive — core mission objective. Not excludable."
+
+operations:
+  - name: "Op 1: Quick Filters"
+    status: complete
+    pr: https://github.com/g2i-ai/hubshot/pull/251
+    convergence_dossier: memory/dossiers/contacts-convergence-20260302T2030Z.yaml
+    delivered:
+      - D-010 — Quick filter pills (Contact owner, Create date, Last activity date, Lead status)
+      - D-011 — Filter bar defaults to collapsed
+
+  - name: "Op 2: List View Polish"
+    status: complete
+    pr: https://github.com/g2i-ai/hubshot/pull/256
+    convergence_dossier: memory/dossiers/contacts-convergence-20260302T2330Z.yaml
+    delivered:
+      - D-005 — Contact count badge on active view tab
+      - D-006 — Remove view buttons hidden on inactive tabs
+      - D-007 — Removed extra "More actions" button
+      - D-008 — Removed extra "Copy" button
+      - D-009 — Sort button shows static "Sort" label
+      - D-013 — Preview button verified (pre-existing)
+      - D-014 — Contact name rendered as Link element
+      - D-015 — Avatar initials from firstname/lastname
+      - D-016 — Search query synced to URL via nuqs
+      - D-017 — Search clear resets both display and query state
+      - D-018 — Pagination buttons with proper labels and aria
+      - VERIFY-EDIT-COLUMNS — Edit columns modal verified
+
+  - name: "Op 3: Create Form + Detail View"
+    status: complete
+    pr: https://github.com/g2i-ai/hubshot/pull/260
+    delivered:
+      # Create Form (14 gaps)
+      - CF-D-001 — Removed choice modal, direct to create sheet
+      - CF-D-003 — Edit this form link
+      - CF-D-004 — Removed extra address fields
+      - CF-D-005 — Removed extra Website URL field
+      - CF-D-006 — Phone number field type fix
+      - CF-D-008 — Dropdown implementation
+      - CF-D-009 — Contact owner default (logged-in user)
+      - CF-D-010 — Contact owner options (user list)
+      - CF-D-011 — Lead status sentence case
+      - CF-D-012 — Removed status message
+      - CF-D-013 — Marketing section heading (h6)
+      - CF-D-014 — Fixed duplicate checkboxes
+      - CF-D-015 — Removed duplicate close button
+      - CF-D-016 — First/last name field type
+      # Detail View (21 gaps)
+      - DV-D-001 — Contact name as h2 heading
+      - DV-D-002 — Edit name button
+      - DV-D-003 — Job title/company subtitle
+      - DV-D-004 — Email as mailto link with copy
+      - DV-D-005 — Copy email button
+      - DV-D-006 — Enrichment banner
+      - DV-D-007 — Overview data row
+      - DV-D-008 — Social links
+      - DV-D-009 — Company intelligence block
+      - DV-D-010 — Contact outreach card
+      - DV-D-011 — Actions dropdown label
+      - DV-D-012 — Phone number tel: link
+      - DV-D-013 — Field inline edit interaction
+      - DV-D-014 — Last Contacted field
+      - DV-D-015 — Preferred language field
+      - DV-D-016 — Product Purchased field
+      - DV-D-017 — Review associations action
+      - DV-D-018 — Collapse sidebar button
+      - DV-D-019 — Association panels collapsed by default
+      - DV-D-020 — Removed drag to reorder handles
+      - DV-D-021 — Removed search/sort buttons on associations
+
+prior_intelligence:
+  - memory/dossiers/contacts-listview-delta-20260302T1930Z.yaml
+  - memory/dossiers/contacts-convergence-20260302T2030Z.yaml
+  - memory/dossiers/contacts-create-form-delta-20260302T1945Z.yaml
+  - memory/dossiers/contacts-detail-view-delta-20260302T2130Z.yaml
+
+progress:
+  operations_complete: 3
+  operations_total: 3

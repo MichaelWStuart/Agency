@@ -1,0 +1,542 @@
+# DOSSIER — DELTA
+# Template: dossier-delta-v1
+---
+metadata:
+  domain: contacts
+  timestamp: "2026-03-01T21:00:00Z"
+  strategy: calibrate
+  producer: intelligence/analysis
+  reference_dossier: null
+  mission: contacts-lists-calibration
+  surface: "Creating Contacts (ROM-7)"
+
+surfaces:
+  - name: "Creating Contacts"
+    reference_url: "https://app-na2.hubspot.com/contacts/245093720/objects/0-1/views/all/list"
+    implementation_url: "http://localhost:3002/contacts/1/objects/0-1/views/all/list"
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md
+      implementation: workspace/evidence/contacts/implementation-create-contact.md
+
+gaps:
+  # ===================================================================
+  # Layer 1 — Surface Inventory
+  # ===================================================================
+
+  - id: D-001
+    surface: "Creating Contacts"
+    component: "Entry Flow"
+    element: "ChoiceModal"
+    layer: 1
+    category: type_mismatch
+    severity: major
+    expected: >
+      Clicking "Create new" from the "Add contacts" dropdown opens the Create Contact
+      drawer directly. No intermediate step.
+    actual: >
+      Clicking "Create new" opens a ChoiceModal dialog ("Create your first contact")
+      with two options: "Help me get started" and "I'll set up myself". User must
+      click "I'll set up myself" to reach the actual Create Contact form. This adds
+      an unnecessary extra step to every contact creation.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#entry-point
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#intermediate-step-choicemodal
+    fix_scope: M
+
+  # ===================================================================
+  # Layer 2 — Element Inventory
+  # ===================================================================
+
+  - id: D-002
+    surface: "Creating Contacts"
+    component: "Form Header"
+    element: "Edit this form link"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: >
+      "Edit this form" link present in top-right of form header. Opens
+      /object-manager-settings/{portalId}/creator-editor/0-1 in new window.
+    actual: >
+      No "Edit this form" link exists anywhere in the form. Zero anchor
+      elements (<a>) found in the dialog.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#drawer-structure
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#form-structure
+    fix_scope: S
+
+  - id: D-003
+    surface: "Creating Contacts"
+    component: "Form Body"
+    element: "Street address field"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: >
+      Street address field is NOT present in the reference Create Contact form.
+      Reference has 9 fields: Email, First name, Last name, Contact owner,
+      Job title, Phone number, Lifecycle stage, Lead status, Marketing checkbox.
+    actual: >
+      Street address field IS present in implementation. 6 extra fields exist:
+      Street address, City, State/Region, Postal code, Country/Region, Website URL.
+      These are EXTRA elements not in the reference form.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#form-fields
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#9-street-address
+    fix_scope: M
+
+  - id: D-004
+    surface: "Creating Contacts"
+    component: "Form Body"
+    element: "City field"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: "City field is NOT present in the reference Create Contact form."
+    actual: "City field IS present in implementation. EXTRA element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#form-fields
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#10-city
+    fix_scope: S
+
+  - id: D-005
+    surface: "Creating Contacts"
+    component: "Form Body"
+    element: "State/Region field"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: "State/Region field is NOT present in the reference Create Contact form."
+    actual: "State/Region field IS present in implementation. EXTRA element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#form-fields
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#11-stateregion
+    fix_scope: S
+
+  - id: D-006
+    surface: "Creating Contacts"
+    component: "Form Body"
+    element: "Postal code field"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: "Postal code field is NOT present in the reference Create Contact form."
+    actual: "Postal code field IS present in implementation. EXTRA element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#form-fields
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#12-postal-code
+    fix_scope: S
+
+  - id: D-007
+    surface: "Creating Contacts"
+    component: "Form Body"
+    element: "Country/Region field"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: "Country/Region field is NOT present in the reference Create Contact form."
+    actual: "Country/Region field IS present in implementation. EXTRA element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#form-fields
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#13-countryregion
+    fix_scope: S
+
+  - id: D-008
+    surface: "Creating Contacts"
+    component: "Form Body"
+    element: "Website URL field"
+    layer: 2
+    category: missing
+    severity: minor
+    expected: "Website URL field is NOT present in the reference Create Contact form."
+    actual: "Website URL field IS present in implementation. EXTRA element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#form-fields
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#14-website-url
+    fix_scope: S
+
+  - id: D-009
+    surface: "Creating Contacts"
+    component: "Form Fields — Contact owner"
+    element: "Info icon (hover-reveal)"
+    layer: 2
+    category: missing
+    severity: cosmetic
+    expected: >
+      Contact owner field has a hover-reveal info icon (HoverContent pattern).
+    actual: >
+      Contact owner field has no info icon.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#4-contact-owner
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#4-contact-owner
+    fix_scope: S
+
+  - id: D-010
+    surface: "Creating Contacts"
+    component: "Form Fields — Job title"
+    element: "Info icon (hover-reveal)"
+    layer: 2
+    category: missing
+    severity: cosmetic
+    expected: >
+      Job title field has a hover-reveal info icon (HoverContent pattern).
+    actual: >
+      Job title field has no info icon.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#5-job-title
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#5-job-title
+    fix_scope: S
+
+  - id: D-011
+    surface: "Creating Contacts"
+    component: "Form Fields — Phone number"
+    element: "Info icon (hover-reveal)"
+    layer: 2
+    category: missing
+    severity: cosmetic
+    expected: >
+      Phone number field has a hover-reveal info icon (HoverContent pattern).
+    actual: >
+      Phone number field has no info icon.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#6-phone-number
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#6-phone-number
+    fix_scope: S
+
+  - id: D-012
+    surface: "Creating Contacts"
+    component: "Form Fields — Lifecycle stage"
+    element: "Info icon (hover-reveal)"
+    layer: 2
+    category: missing
+    severity: cosmetic
+    expected: >
+      Lifecycle stage field has a hover-reveal info icon (HoverContent pattern).
+    actual: >
+      Lifecycle stage field has no info icon.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#7-lifecycle-stage
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#7-lifecycle-stage
+    fix_scope: S
+
+  - id: D-013
+    surface: "Creating Contacts"
+    component: "Form Fields — Lead status"
+    element: "Info icon (hover-reveal)"
+    layer: 2
+    category: missing
+    severity: cosmetic
+    expected: >
+      Lead status field has a hover-reveal info icon (HoverContent pattern).
+    actual: >
+      Lead status field has no info icon.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#8-lead-status
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#8-lead-status
+    fix_scope: S
+
+  # ===================================================================
+  # Layer 3 — Element State
+  # ===================================================================
+
+  - id: D-014
+    surface: "Creating Contacts"
+    component: "Form Fields — Contact owner"
+    element: "Default value"
+    layer: 3
+    category: state_mismatch
+    severity: major
+    expected: >
+      Contact owner is pre-populated with the current logged-in user.
+      Default shows "Callum Foster" (current user).
+    actual: >
+      Contact owner shows "—" (empty). Not pre-populated with any user.
+      Implementation uses EMPTY_SELECT_VALUE ('__none__') as default.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#4-contact-owner
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#4-contact-owner
+    fix_scope: S
+
+  - id: D-015
+    surface: "Creating Contacts"
+    component: "Form Fields — First name"
+    element: "Input type"
+    layer: 3
+    category: type_mismatch
+    severity: cosmetic
+    expected: "First name renders as a <textarea> element."
+    actual: "First name renders as an <input type='text'> element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#2-first-name
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#2-first-name
+    fix_scope: S
+
+  - id: D-016
+    surface: "Creating Contacts"
+    component: "Form Fields — Last name"
+    element: "Input type"
+    layer: 3
+    category: type_mismatch
+    severity: cosmetic
+    expected: "Last name renders as a <textarea> element."
+    actual: "Last name renders as an <input type='text'> element."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#3-last-name
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#3-last-name
+    fix_scope: S
+
+  - id: D-017
+    surface: "Creating Contacts"
+    component: "Form Fields — First name"
+    element: "Placeholder"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    expected: "First name field has no placeholder text."
+    actual: "First name field has placeholder 'First name'."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#2-first-name
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#2-first-name
+    fix_scope: S
+
+  - id: D-018
+    surface: "Creating Contacts"
+    component: "Form Fields — Last name"
+    element: "Placeholder"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    expected: "Last name field has no placeholder text."
+    actual: "Last name field has placeholder 'Last name'."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#3-last-name
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#3-last-name
+    fix_scope: S
+
+  - id: D-019
+    surface: "Creating Contacts"
+    component: "Form Fields — Email"
+    element: "Placeholder"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    expected: "Email field has no placeholder text."
+    actual: "Email field has placeholder 'Email'."
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#1-email
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#1-email
+    fix_scope: S
+
+  # ===================================================================
+  # Layer 4 — Interaction Behavior
+  # ===================================================================
+
+  - id: D-020
+    surface: "Creating Contacts"
+    component: "Form Validity"
+    element: "Create button enablement"
+    layer: 4
+    category: behavior_mismatch
+    severity: critical
+    expected: >
+      Contact can be created with only an email address (no name required).
+      Email-only creation is a valid path.
+    actual: >
+      Contact CANNOT be created with only an email. canCreate logic requires
+      hasName (firstName or lastName must be non-empty). The code:
+      canCreate = hasName && !emailError. Email-only creation is blocked.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#behavioral-notes
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#validity-logic
+    fix_scope: S
+
+  - id: D-021
+    surface: "Creating Contacts"
+    component: "Form Fields — Disabled state"
+    element: "Fields 4-8 disabled region"
+    layer: 4
+    category: behavior_mismatch
+    severity: major
+    expected: >
+      Only Job title (field 5) and Phone number (field 6) are disabled until
+      email or name is entered. Contact owner, Lifecycle stage, and Lead status
+      are always interactive.
+    actual: >
+      ALL fields below the top 3 (Email, First name, Last name) are disabled
+      via CSS (pointer-events-none, opacity-60) when primaryValid is false.
+      This includes Contact owner, Job title, Phone number, Lifecycle stage,
+      Lead status, AND all extra address/website fields. Over-aggressive disabling.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#behavioral-notes
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#behavioral-notes
+    fix_scope: S
+
+  - id: D-022
+    surface: "Creating Contacts"
+    component: "Helper Text"
+    element: "Helper text position"
+    layer: 4
+    category: behavior_mismatch
+    severity: minor
+    expected: >
+      Helper text "Start by entering the Contact's name, email, or both." is
+      visible on the right side of the form without scrolling, as a static label.
+    actual: >
+      Helper text is rendered as a centered overlay (role="status") on top of
+      the disabled fields section. It obscures the fields rather than appearing
+      beside them. Different layout and different UX pattern.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#drawer-structure
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#behavioral-notes
+    fix_scope: S
+
+  - id: D-023
+    surface: "Creating Contacts"
+    component: "Footer"
+    element: "Cancel button style"
+    layer: 3
+    category: cosmetic
+    severity: cosmetic
+    expected: >
+      Cancel button renders with outlined/red styling (destructive variant).
+    actual: >
+      Cancel button renders with plain outline styling (variant="outline"),
+      no red/destructive color.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#drawer-structure
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#form-structure
+    fix_scope: S
+
+  - id: D-024
+    surface: "Creating Contacts"
+    component: "Marketing Checkbox"
+    element: "Tooltip content"
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    expected: >
+      Info icon near the marketing contact checkbox uses HelpIcon component.
+      Exact tooltip content not captured (iframe limitation).
+    actual: >
+      Info button with Tooltip shows: "When enabled, this contact can be
+      included in marketing campaigns and email lists." Uses Radix Tooltip.
+    evidence:
+      reference: workspace/evidence/contacts/reference-create-contact.md#9-marketing-contact-checkbox
+      implementation: workspace/evidence/contacts/implementation-create-contact.md#15-marketing-contact-checkbox
+    fix_scope: S
+
+summary:
+  total_gaps: 24
+  by_severity:
+    critical: 1
+    major: 3
+    minor: 9
+    cosmetic: 11
+  by_fix_scope:
+    S: 21
+    M: 3
+    L: 0
+  recommendation: >
+    One critical gap (D-020: email-only creation blocked) must be fixed first.
+    Three major gaps (D-001: ChoiceModal intercept, D-014: contact owner not
+    pre-populated, D-021: over-aggressive field disabling) are high priority.
+    The 6 EXTRA address/website fields (D-003 through D-008) should be removed
+    to match reference. Most fixes are single-file scope (S). Recommend
+    Production targets critical + major gaps in first iteration, minor/cosmetic
+    in second.
+
+cross_reference:
+  confirmed:
+    - gap_id: D-020
+      ticket: ROM-763
+      # "Contact creation fails with only email" — confirmed independently
+    - gap_id: D-001
+      ticket: ROM-764
+      # "Create Contact opens popup instead of drawer" — confirmed; the
+      # ChoiceModal IS a popup/dialog before the drawer opens
+    - gap_id: D-014
+      ticket: ROM-765
+      # "Contact owner not pre-populated" — confirmed independently
+    - gap_id: D-002
+      ticket: ROM-766
+      # "Edit this form link missing" — confirmed independently
+    - gap_id: D-003
+      ticket: ROM-789
+      # "Additional fields available in reference app" — confirmed; 6 EXTRA
+      # fields in implementation that are not in reference (inverse framing:
+      # QA said reference has more fields, Intel found implementation has extra fields)
+
+  missed:
+    - ticket: ROM-767
+      summary: "Life Cycle Stage placeholder wrong"
+      # Intel observation: Lifecycle stage default is "Lead" in both reference
+      # and implementation, matching correctly. The placeholder "Select stage"
+      # differs but this is for the empty state which is not the default.
+      # QA may have observed a different state or the issue was fixed.
+    - ticket: ROM-768
+      summary: "Life Cycle Stage search missing in dropdown"
+      # Not captured: Intel could not verify dropdown search behavior in
+      # reference (iframe limitation) and did not open implementation dropdown.
+    - ticket: ROM-772
+      summary: "Contact creation overlay helper text only visible after scrolling"
+      # Partially captured as D-022 (helper text position differs), but the
+      # specific scrolling issue was not independently identified as the primary
+      # concern. Intel focused on overlay vs sidebar positioning.
+    - ticket: ROM-773
+      summary: "Invalid phone number defaults to US (+1)"
+      # Not captured: Intel did not exercise phone number input behavior
+      # (would require interaction testing with PhoneNumberInput component).
+    - ticket: ROM-774
+      summary: "Info icon missing in phone number popup"
+      # Captured as D-011 (phone number info icon missing). The "popup" framing
+      # differs from Intel's framing but the finding overlaps.
+    - ticket: ROM-775
+      summary: "Lead Status search missing in dropdown"
+      # Not captured: Intel did not open the Lead Status dropdown to verify
+      # search behavior.
+    - ticket: ROM-776
+      summary: "Lead Status placeholder wrong"
+      # Intel observation: Lead status default is empty ("—") in both reference
+      # and implementation. QA may have observed a different placeholder text.
+    - ticket: ROM-777
+      summary: "Info icon popup content different"
+      # Partially captured as D-024 (marketing checkbox tooltip content).
+      # Intel noted content exists but could not compare verbatim due to
+      # reference iframe limitations.
+    - ticket: ROM-779
+      summary: "Duplicate email should fail creation"
+      # Not captured: Intel did not test duplicate email submission behavior.
+      # Would require behavioral testing with actual form submission.
+
+  new:
+    - gap_id: D-001
+      # ChoiceModal intercept — QA found this as ROM-764 (popup) but the
+      # ChoiceModal is a SEPARATE dialog before the form, not just a type
+      # difference. Intel provides more granular diagnosis.
+    - gap_id: D-021
+      # Over-aggressive field disabling — not in QA findings. Intel found
+      # that ALL lower fields are disabled, not just Job title and Phone
+      # number as in the reference.
+    - gap_id: D-022
+      # Helper text overlay positioning — different from ROM-772. Intel
+      # identified the root cause: overlay pattern vs sidebar positioning.
+    - gap_id: D-015
+      # First name input type mismatch (input vs textarea)
+    - gap_id: D-016
+      # Last name input type mismatch (input vs textarea)
+    - gap_id: D-017
+      # First name placeholder (should be empty)
+    - gap_id: D-018
+      # Last name placeholder (should be empty)
+    - gap_id: D-019
+      # Email placeholder (should be empty)
+    - gap_id: D-009
+      # Contact owner info icon missing
+    - gap_id: D-010
+      # Job title info icon missing
+    - gap_id: D-012
+      # Lifecycle stage info icon missing
+    - gap_id: D-013
+      # Lead status info icon missing
+    - gap_id: D-023
+      # Cancel button styling (not red/destructive)

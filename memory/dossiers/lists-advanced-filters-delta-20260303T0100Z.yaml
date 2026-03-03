@@ -1,0 +1,348 @@
+# DOSSIER — DELTA
+# Template: dossier-delta-v1
+---
+metadata:
+  domain: lists
+  surface: advanced-filters
+  timestamp: "2026-03-03T01:00:00Z"
+  strategy: calibrate
+  producer: intelligence/analysis
+  mission: contacts-lists-calibration
+  iteration: 1
+  reference_dossier: null
+
+surfaces:
+  - name: Advanced Filters
+    reference_url: "https://app-na2.hubspot.com/contacts/245093720/objects/0-1/views/all/list"
+    implementation_url: "http://localhost:3002/contacts/245093720/objects/0-1/views/all/list"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/manifest.yaml
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/manifest.yaml
+
+fidelity_score: 30
+
+gaps:
+  # --- Layer 1: Surface Inventory ---
+  - id: D-001
+    surface: advanced-filters
+    component: Filter Container
+    element: Container Type
+    layer: 1
+    category: type_mismatch
+    severity: major
+    priority: P1
+    expected: "Right sidebar panel overlaying the data table, opened via 'Advanced filters' button in filter bar"
+    actual: "Inline region below toolbar, toggled by 'Filters' button. No sidebar panel."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: L
+
+  - id: D-002
+    surface: advanced-filters
+    component: Filter Bar
+    element: Quick Filter Buttons
+    layer: 1
+    category: missing
+    severity: major
+    priority: P1
+    expected: "Quick filter buttons: 'Contact owner', 'Create date', 'Last activity date' with haspopup='menu', plus 'More' button and 'Advanced filters' button"
+    actual: "No quick filter buttons. Only a 'Filters' toggle that opens the inline filter region directly."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: L
+
+  - id: D-003
+    surface: advanced-filters
+    component: Filter Container
+    element: Sidebar Header
+    layer: 1
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Sidebar header with 'All filters' banner text and close button (X)"
+    actual: "No header — inline region has no header/banner. No close button (Filters toggle serves as dismiss)."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-004
+    surface: advanced-filters
+    component: Filter Container
+    element: Advanced Filters Heading
+    layer: 1
+    category: missing
+    severity: cosmetic
+    priority: P3
+    expected: "Heading: 'Advanced Filters' (h2) inside sidebar"
+    actual: "No heading. Empty state shows 'Add filters to define which records belong to this segment.' text instead."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: S
+
+  # --- Layer 2: Element Inventory ---
+  - id: D-005
+    surface: advanced-filters
+    component: Property Picker
+    element: Container Type
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "Popover/dialog with heading 'Add filter' (h2), 'Cancel' button, searchbox labeled 'Search' (searches 'in Contact properties')"
+    actual: "Dialog element with combobox (serves as both search and selection). No 'Cancel' button, no heading. Close icon present."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-006
+    surface: advanced-filters
+    component: Property Picker
+    element: Property Count
+    layer: 2
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "~275 properties in 12 categories (Contact activity, Deal information, Order Information, Sales properties, Calculated Contact Information, Contact information, Social media information, Web analytics history, Conversion information, Email information, Facebook Ads properties, Contact Lifecycle Stage Properties)"
+    actual: "5 properties in flat list (Create Date, Email, First Name, Lead Status, Phone Number). No categories, no category headings."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: L
+
+  - id: D-007
+    surface: advanced-filters
+    component: Property Picker
+    element: Property Grid Layout
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "Grid element (role='grid', readonly) with virtualized scrolling. Properties as button elements organized under category headings (h6)."
+    actual: "Listbox element labeled 'Suggestions' with group. Properties as option elements. No grid, no virtualized scrolling, no category headings."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-008
+    surface: advanced-filters
+    component: Condition Row
+    element: Drag Handle
+    layer: 2
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Drag handle button (disabled when single condition) for reordering conditions"
+    actual: "No drag handle. No condition reordering capability."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-009
+    surface: advanced-filters
+    component: Condition Row
+    element: Move Button
+    layer: 2
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Move button to move condition between groups"
+    actual: "No move button. Cannot move conditions between groups."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-010
+    surface: advanced-filters
+    component: Condition Row
+    element: Property Selector
+    layer: 2
+    category: type_mismatch
+    severity: minor
+    priority: P2
+    expected: "Property selector button (haspopup='menu') — shows selected property name, clickable to change to a different property"
+    actual: "Static text label showing property name. Not clickable, not changeable. Must delete condition and re-add to change property."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  # --- Layer 3: Element State ---
+  - id: D-011
+    surface: advanced-filters
+    component: Group Structure
+    element: Group Heading Level
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Group heading 'Group 1' uses h2 element"
+    actual: "Group heading 'Group 1' uses h3 element"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-012
+    surface: advanced-filters
+    component: String Operators
+    element: Operator Names
+    layer: 3
+    category: content_mismatch
+    severity: major
+    priority: P1
+    expected: "6 operators: 'is equal to any of', 'is not equal to any of', 'contains exactly', 'doesn't contain exactly', 'is known', 'is unknown'"
+    actual: "7 operators: 'is equal to', 'is not equal to', 'contains', 'starts with', 'ends with', 'is set', 'is not set'. Different names, different set of operators."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-013
+    surface: advanced-filters
+    component: Date Operators
+    element: Operator Names
+    layer: 3
+    category: content_mismatch
+    severity: major
+    priority: P1
+    expected: "9 operators: 'is', 'is equal to', 'is before', 'is after', 'is between', 'is more than', 'is less than', 'is known', 'is unknown'"
+    actual: "7 operators: 'is equal to', 'is greater than', 'is less than', 'is greater or equal', 'is less or equal', 'is set', 'is not set'. Different names, different set (missing 'is', 'is before/after', 'is between', 'is more/less than'; has 'is greater/less or equal' instead)."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-014
+    surface: advanced-filters
+    component: Date Value Input
+    element: Date Presets
+    layer: 3
+    category: missing
+    severity: critical
+    priority: P0
+    expected: "Dropdown button (haspopup='menu') with 35 preset date values organized by Day/Week/Month/Quarter/Year/Rolling. Default: 'Today'. Shows info text with timestamp and timezone."
+    actual: "Plain textbox with no presets, no date picker, no preset dropdown. No info text."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: L
+
+  - id: D-015
+    surface: advanced-filters
+    component: String Value Input
+    element: Multi-value Support
+    layer: 3
+    category: missing
+    severity: major
+    priority: P1
+    expected: "Combobox labeled 'Enter value' (expandable, haspopup='listbox'), with 'Add values' label. Multi-value support with tags."
+    actual: "Plain textbox with placeholder 'Enter a value'. Single value only — no multi-value/tag support."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  # --- Layer 4: Interaction Behavior ---
+  - id: D-016
+    surface: advanced-filters
+    component: AND/OR Logic
+    element: Intra-group Connector
+    layer: 4
+    category: behavior_mismatch
+    severity: major
+    priority: P1
+    expected: "Fixed 'and' text label between conditions within a group. AND logic is structural — determined by group membership, not user selection."
+    actual: "Combobox dropdown between conditions with options ['and', 'or']. User can toggle between AND/OR at each junction point. Logic is per-junction, not per-group."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: L
+
+  - id: D-017
+    surface: advanced-filters
+    component: Delete Behavior
+    element: Last Condition Confirmation
+    layer: 4
+    category: missing
+    severity: minor
+    priority: P2
+    expected: "Deleting last condition in group shows confirmation dialog: 'Delete criteria?' with text 'This is the last criteria in this group. Deleting it will also delete the group.' and 'Delete group'/'Cancel' buttons."
+    actual: "No confirmation dialog when deleting conditions. 'Remove condition' button removes immediately. 'Delete group' button on group header also available."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: M
+
+  - id: D-018
+    surface: advanced-filters
+    component: Condition Row
+    element: Delete Button Label
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "Delete button (generic 'Delete' action on each condition row)"
+    actual: "'Remove condition' button with explicit label text"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-019
+    surface: advanced-filters
+    component: Filter Container
+    element: Empty State Text
+    layer: 3
+    category: content_mismatch
+    severity: cosmetic
+    priority: P3
+    expected: "'This view doesn't have any advanced filters.'"
+    actual: "'Add filters to define which records belong to this segment.'"
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: S
+
+  - id: D-020
+    surface: advanced-filters
+    component: Filter Container
+    element: Default Expanded State
+    layer: 3
+    category: state_mismatch
+    severity: minor
+    priority: P2
+    expected: "Filter bar collapsed by default (Filters button not expanded). Advanced filters accessed via explicit 'Advanced filters' button click."
+    actual: "Filters button shows expanded state by default. Filter region always visible when expanded."
+    evidence:
+      reference: ~/.claude/agency-workspace/evidence/lists/advanced-filters-ref/resting-state.md
+      implementation: ~/.claude/agency-workspace/evidence/lists/advanced-filters-impl/resting-state.md
+    fix_scope: S
+
+summary:
+  total_gaps: 20
+  by_severity: {critical: 2, major: 6, minor: 7, cosmetic: 5}
+  by_priority: {P0: 2, P1: 5, P2: 8, P3: 5}
+  by_fix_scope: {S: 6, M: 9, L: 5}
+  recommendation: "Focus on P0 gaps first: Property Count (D-006) is the most fundamental gap — the filter is unusable for real filtering with only 5 properties. Date Presets (D-014) makes date filtering non-functional. Then P1 gaps: Container Type (D-001), Quick Filters (D-002), String/Date Operator names (D-012, D-013), Multi-value support (D-015), and AND/OR logic model (D-016) represent the core behavioral divergences. The implementation has the structural skeleton of a filter builder but diverges significantly from reference in operator vocabulary, value input patterns, property coverage, and logical connector model."
+
+matches:
+  - component: Group Structure
+    note: "Both use numbered groups with 'Add filter' within group and 'Add filter group' between groups. Group-based organization is architecturally aligned."
+  - component: Add Filter Flow
+    note: "Both use 'Add filter' button -> property picker -> condition created flow. The basic add-condition workflow is structurally similar."
+  - component: Operator Selection
+    note: "Both use combobox/dropdown pattern for operator selection. The UI control type matches, even though the operator values differ."
+  - component: Save Button
+    note: "'Save' button in toolbar, disabled until changes made. Matches reference pattern."
+  - component: Inter-group OR
+    note: "'or' text between groups with 'Add filter group' button matches reference pattern for group-level OR logic."
+
+cross_reference: null
