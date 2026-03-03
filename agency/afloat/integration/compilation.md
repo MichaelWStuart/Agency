@@ -118,7 +118,7 @@ Integration Engineer:
 - **Output:** COMPILE_RETURN — status, branch, last commit, deliverables completed
 - **Identity:** Integration Engineer (`afloat/integration/integration-engineer.md`)
   — orchestrator selects from available bunks (currently 2: Atlas B-008, Folio B-010).
-- **Loads:** `construction.md`, `memory/project/conventions.md`,
+- **Loads:** `compilation.md`, `memory/project/conventions.md`,
   `memory/project/context.md`
 
 Inspector:

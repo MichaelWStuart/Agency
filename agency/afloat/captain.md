@@ -123,7 +123,7 @@ Conflict severity?
 │   -> Surface with terminal escalation (NEED: STRUCTURAL_CONFLICT)
 │
 └── Fundamental
-    Work Order is stale (scope changed, feature reassigned).
+    Integration Plot is stale (scope changed, feature reassigned).
     -> Surface with terminal escalation (NEED: STRUCTURAL_CONFLICT)
 ```
 
