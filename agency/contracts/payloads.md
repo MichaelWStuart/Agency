@@ -32,7 +32,7 @@ After receiving return:
 ```
 MISSION BRIEF
 ──────────────
-Load Captain identity: ~/.claude/skills/agency/cadre/wardroom/identities/captain.md
+Load Captain identity: ~/.claude/skills/agency/afloat/captain.md
 
 STRATEGY: {ship → survey | calibrate}
 
@@ -70,26 +70,26 @@ Returned by the Captain on surfacing.
 MISSION RETURN
 ───────────────
 STATUS: {complete | partial | escalation}
-  # complete — all WOs shipped, PR created, E2E passed
-  # partial — mid-dive progress (WO shipped, more remain)
+  # complete — all integration plots shipped, PR created, E2E passed
+  # partial — mid-dive progress (plot shipped, more remain)
   # escalation — requires Admiral routing
 
 DOCKING_READY: {true | false}
   # true — Captain completed docking (PR created, E2E passed)
   # false — Captain surfacing without dock (escalation, partial)
 
-WO_COMPLETED: {WO-N | null}
-WO_REMAINING: {N | 0}
+PLOT_COMPLETED: {IP-N | null}
+PLOT_REMAINING: {N | 0}
 PR: {url | N/A}
 BRANCH: {branch_name}
-GATE_REPORT: {path}
+VALIDATION_REPORT: {path}
 LOG: {path}
 NOTES: [{string, <=50 chars}]
 ```
 
 **STATUS constraints:**
 - `complete` is only valid when `DOCKING_READY: true`. No other combination.
-- `partial` is only valid when `WO_REMAINING > 0`.
+- `partial` is only valid when `PLOT_REMAINING > 0`.
 - `escalation` must include ESCALATION payload fields with a valid NEED from the catalog.
 - No freeform statuses permitted.
 - If context pressure prevents completing docking, return `STATUS: escalation` with `NEED: CONTEXT_EXHAUSTION`.
@@ -107,8 +107,8 @@ per the Escalation Handling protocol.
 ```
 LAUNCH BRIEF: INTELLIGENCE
 ───────────────────────────
-Load Intelligence division protocol: ~/.claude/skills/agency/divisions/intelligence/intelligence.md
-Identity: ~/.claude/skills/agency/cadre/wardroom/identities/chief-analyst.md
+Load Intelligence department protocol: ~/.claude/skills/agency/afloat/intelligence/intelligence.md
+Identity: ~/.claude/skills/agency/afloat/intelligence/chief-analyst.md
 
 INSTRUCTIONS:
   - {instruction_id}         # e.g., INTEL.COLLECT.REFERENCE
@@ -129,16 +129,16 @@ PROJECT CONTEXT:
 RETURN CONTRACT: INTEL_RETURN
 ```
 
-### [LAUNCH_BRIEF] -> Model Shop
+### [LAUNCH_BRIEF] -> Integration
 
 ```
-LAUNCH BRIEF: MODEL SHOP
+LAUNCH BRIEF: INTEGRATION
 ──────────────────────────
-Load Model Shop division protocol: ~/.claude/skills/agency/divisions/model-shop/model-shop.md
-Identity: ~/.claude/skills/agency/cadre/wardroom/identities/model-shop-chief.md
+Load Integration department protocol: ~/.claude/skills/agency/afloat/integration/integration.md
+Identity: ~/.claude/skills/agency/afloat/integration/integration-chief.md
 
 INSTRUCTIONS:
-  - {instruction_id}         # e.g., PROD.SURVEY or PROD.FIX
+  - {instruction_id}         # e.g., INTEG.SURVEY or INTEG.FIX
 
 JOB:
   ticket: {ticket_id}
@@ -162,7 +162,7 @@ PROJECT CONTEXT:
   coordination: memory/project/coordination.md
   failure_catalog: memory/project/failure-class-catalog.md
 
-RETURN CONTRACT: MODEL_SHOP_RETURN
+RETURN CONTRACT: INTEGRATION_RETURN
 ```
 
 ### [INTEL_RETURN]
@@ -193,30 +193,30 @@ When `STATUS: escalation`, the return also carries the ESCALATION payload
 fields (NEED, CONTEXT, ARTIFACTS, CHECKPOINT). The Agency handles this
 per the Escalation Handling protocol.
 
-### [MODEL_SHOP_RETURN]
+### [INTEGRATION_RETURN]
 
-Returned by Model Shop sub-agent on completion.
+Returned by Integration sub-agent on completion.
 
 ```
-MODEL SHOP RETURN
+INTEGRATION RETURN
 ──────────────────
 STATUS: {complete | partial | escalation}
-  # complete — requires all WOs verified and ready for docking
-  # partial — requires WO_REMAINING > 0
+  # complete — requires all plots validated and ready for docking
+  # partial — requires PLOT_REMAINING > 0
   # escalation — requires NEED from catalog
-WO_COMPLETED: {WO-N | null}       # which WO this return covers
-WO_REMAINING: {N | 0}             # WOs still to build (0 = final)
-DOCKING_READY: {true | false}     # all WOs verified, ready for Captain docking
+PLOT_COMPLETED: {IP-N | null}       # which integration plot this return covers
+PLOT_REMAINING: {N | 0}             # plots still to compile (0 = final)
+DOCKING_READY: {true | false}       # all plots validated, ready for Captain docking
 PR: {url | N/A}
 BRANCH: {branch_name}
-GATE_REPORT: {path}               # pointer to gate report artifact (template: gate-report-v1)
-LOG: {path}                        # pointer to production log artifact (jobs/log.md)
+VALIDATION_REPORT: {path}           # pointer to validation report artifact (template: validation-report-v1)
+LOG: {path}                          # pointer to integration log artifact (jobs/log.md)
 NOTES: [{string, <=50 chars}]
 ```
 
 **STATUS constraints:**
 - `complete` is only valid when `DOCKING_READY: true`. No other combination.
-- `partial` is only valid when `WO_REMAINING > 0`.
+- `partial` is only valid when `PLOT_REMAINING > 0`.
 - `escalation` must include ESCALATION payload fields with a valid NEED from the catalog.
 - No freeform statuses permitted.
 
@@ -242,7 +242,7 @@ ARTIFACTS:
 CHECKPOINT: {path | null}
 ```
 
-Production-specific state (branch, last commit, push status) goes into
+Integration-specific state (branch, last commit, push status) goes into
 an artifact file referenced via ARTIFACTS pointer — not top-level fields.
 The ESCALATION payload is role-agnostic.
 
@@ -270,7 +270,7 @@ Agency, the full picture is there.
 The mandatory output from every operation. Delivered to the Director.
 Produced per template (`templates.md`: briefing-v1).
 
-Category values: `SITUATIONAL | TRIAGE | INVESTIGATION | PRODUCTION | CALIBRATION | ESCALATION | DEBRIEF`
+Category values: `SITUATIONAL | TRIAGE | INVESTIGATION | INTEGRATION | CALIBRATION | ESCALATION | DEBRIEF`
 
 Type values: `progress | escalation | debrief`
 - **progress** — informational, pipeline auto-continues, no Director action needed
@@ -282,15 +282,15 @@ Type values: `progress | escalation | debrief`
 ## L2/L3 Payload Shapes
 
 CONTRACT requires defined payloads for every boundary crossing. These shapes
-define L2->L3 crossings within Intelligence and Model Shop.
+define L2->L3 crossings within Intelligence and Integration.
 
 ### [FIELD_BRIEF] (Chief Analyst -> Field Agent)
 
 ```
 FIELD BRIEF
 ───────────
-Identity: ~/.claude/skills/agency/cadre/barracks/identities/field-agent.md
-Protocol: ~/.claude/skills/agency/divisions/intelligence/collection.md
+Identity: ~/.claude/skills/agency/afloat/intelligence/field-agent.md
+Protocol: ~/.claude/skills/agency/afloat/intelligence/collection.md
 
 INSTRUCTION: {instruction_id}    # INTEL.COLLECT.REFERENCE | .IMPLEMENTATION | .AUTH.VERIFY
 CALLSIGN: {Hawk | Kite}
@@ -349,8 +349,8 @@ NOTES: [{string, <=50 chars}]
 ```
 DESK BRIEF
 ──────────
-Identity: ~/.claude/skills/agency/cadre/barracks/identities/desk-analyst.md
-Protocol: ~/.claude/skills/agency/divisions/intelligence/{analysis|calibration|cartography}.md
+Identity: ~/.claude/skills/agency/afloat/intelligence/desk-analyst.md
+Protocol: ~/.claude/skills/agency/afloat/intelligence/{analysis|calibration|cartography}.md
 Templates: ~/.claude/skills/agency/templates.md
 
 INSTRUCTION: {instruction_id}    # INTEL.ANALYZE.DELTA | .REFERENCE | INTEL.VERIFY.CONVERGENCE | INTEL.CHART.UPDATE
@@ -396,18 +396,18 @@ CROSS_REFERENCE:                  # if prior_findings provided
 NOTES: [{string, <=50 chars}]
 ```
 
-### [STATION_BRIEF] (Orchestrator -> Station Worker)
+### [COMPILE_BRIEF] (Orchestrator -> Integration Engineer)
 
 ```
-STATION BRIEF
+COMPILE BRIEF
 ─────────────
 Identity: {identity_path}
 Protocol: {protocol_path}
 
-INSTRUCTION: {PROD.BUILD | PROD.REWORK}
-CALLSIGN: {Mason | Slate}
+INSTRUCTION: {INTEG.COMPILE | INTEG.REWORK}
+CALLSIGN: {Atlas | Folio}
 
-WO: {path}                              # jobs/wo-{N}.md
+PLOT: {path}                              # jobs/ip-{N}.md
 BRANCH: {branch_name}
 STATION: {station_id | null}
 
@@ -419,16 +419,16 @@ PROJECT CONTEXT:
   context: {path}
   conventions: {path}
 
-RETURN CONTRACT: STATION_RETURN
+RETURN CONTRACT: COMPILE_RETURN
 ```
 
-### [STATION_RETURN]
+### [COMPILE_RETURN]
 
 ```
-STATION RETURN
+COMPILE RETURN
 ──────────────
 STATUS: {complete | partial | escalation}
-WO: {wo_id}
+PLOT: {plot_id}
 STATION: {station_id | null}
 BRANCH: {branch_name}
 LAST_COMMIT: {sha}
@@ -436,19 +436,19 @@ DELIVERABLES_COMPLETED: [{deliverable_id}]
 NOTES: [{string, <=50 chars}]
 ```
 
-### [QC_BRIEF] (Orchestrator -> Inspector)
+### [VALIDATION_BRIEF] (Orchestrator -> Inspector)
 
 ```
-QC BRIEF
-────────
+VALIDATION BRIEF
+────────────────
 Identity: {identity_path}
 Protocol: {protocol_path}
 
-INSTRUCTION: PROD.QC
-CALLSIGN: Quinn
+INSTRUCTION: INTEG.VALIDATE
+CALLSIGN: Datum
 
 BRANCH: {branch_name}
-WO: {wo_id}
+PLOT: {plot_id}
 STATION: {station_id | null}
 
 ARTIFACT POINTERS:
@@ -459,18 +459,18 @@ ARTIFACT POINTERS:
 PROJECT CONTEXT:
   conventions: {path}
 
-RETURN CONTRACT: QC_RETURN
+RETURN CONTRACT: VALIDATION_RETURN
 ```
 
-### [QC_RETURN]
+### [VALIDATION_RETURN]
 
 ```
-QC RETURN
-─────────
+VALIDATION RETURN
+─────────────────
 STATUS: {pass | fail | escalation}
-INSTRUCTION: PROD.QC
-CALLSIGN: Quinn
+INSTRUCTION: INTEG.VALIDATE
+CALLSIGN: Datum
 
-GATE REPORT: {per gate-report-v1 template — see templates.md}
+VALIDATION REPORT: {per validation-report-v1 template — see templates.md}
 NOTES: [{string, <=50 chars}]
 ```

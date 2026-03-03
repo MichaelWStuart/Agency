@@ -144,17 +144,17 @@ summary:
 
 ---
 
-## Gate Report (gate-report-v1)
+## Validation Report (validation-report-v1)
 
 ```yaml
-# GATE REPORT
-# Template: gate-report-v1
+# VALIDATION REPORT
+# Template: validation-report-v1
 ---
 metadata:
-  wo: {WO-N}
+  plot: {IP-N}
   station: {S-M | null}
   timestamp: {ISO-8601}
-  producer: model-shop/verification
+  producer: integration/validation
 
 gates:
   - id: 1
@@ -184,18 +184,18 @@ failure_details: [{gate_id, reason}] | null
 
 ---
 
-## Work Order (work-order-v1)
+## Integration Plot (integration-plot-v1)
 
 ```yaml
-# WORK ORDER
-# Template: work-order-v1
+# INTEGRATION PLOT
+# Template: integration-plot-v1
 ---
 metadata:
-  id: {WO-N}
+  id: {IP-N}
   job: {ticket ID}
   timestamp: {ISO-8601}
-  producer: model-shop/planning
-  depends_on: {WO-N-1 | null}
+  producer: integration/plotting
+  depends_on: {IP-N-1 | null}
 
 scope:
   title: {string}
@@ -228,7 +228,7 @@ stations:                       # only if station_count > 1
 metadata:
   job: {ticket ID or description}
   timestamp: {ISO-8601}
-  producer: model-shop/receiving
+  producer: integration/receiving
   material_type: {crude | feedstock | work_order | product | verified_product}
   entry_department: {string}
 
@@ -298,7 +298,7 @@ capture_metadata:
 # Template: briefing-v1
 ---
 metadata:
-  division: {Intelligence | Model Shop | Agency}
+  department: {Intelligence | Integration | Agency}
   operation: {string, <=100 chars}
   strategy: {survey | calibrate | N/A}
   category: {SITUATIONAL | TRIAGE | INVESTIGATION | PRODUCTION | CALIBRATION | ESCALATION | DEBRIEF}
@@ -424,7 +424,7 @@ reconciliation:
 # Template: dossier-index-v1
 # Location: memory/dossiers/index.yaml
 # Maintained by Chief Analyst during promotion (intelligence.md step 12)
-# Consumed by Admiral (mission planning) and Planning (feedstock initialization)
+# Consumed by Admiral (mission planning) and Plotting (feedstock initialization)
 ---
 entries:
   - domain: {string}              # e.g., "contacts"

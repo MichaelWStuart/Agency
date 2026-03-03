@@ -39,24 +39,24 @@ annotation naming the gap.
 | `AGENCY.MISSION.CREATE` | Initialize a new mission manifest from Director intent | None (Admiral queries Linear, interprets Director intent) | Mission manifest at `memory/missions/` | `admiral.md`, `templates.md` |
 | `AGENCY.MISSION.UPDATE` | Update mission manifest from Director intent | Mission manifest pointer (Admiral loads and interprets) | Updated mission manifest | `admiral.md` |
 
-### Production Instructions
+### Integration Instructions
 
 | ID | Description | Required Artifacts | Return | Files to Load |
 |---|---|---|---|---|
-| `PROD.SURVEY` | Standard survey: dossier -> WOs -> build -> verify | Dossier (reference) pointer | MODEL_SHOP_RETURN with Gate Reports | `model-shop-chief.md`, `model-shop.md`, `receiving.md`, `planning.md`, `construction.md`, `verification.md` |
-| `PROD.FIX` | Calibration fix: delta -> targeted WOs -> fix -> verify | Dossier (delta) pointer | MODEL_SHOP_RETURN with Gate Reports | `model-shop-chief.md`, `model-shop.md`, `receiving.md`, `planning.md`, `construction.md`, `verification.md` |
-| `PROD.RESUME` | Resume job from a checkpoint | Checkpoint artifact pointer | MODEL_SHOP_RETURN | `model-shop-chief.md`, `model-shop.md` + department file per checkpoint stage |
-| `PROD.BUILD` | Build deliverables per Work Order at a station | Work Order pointer + branch | STATION_RETURN | `station-worker.md`, `construction.md` |
-| `PROD.REWORK` | Rework station deliverables after QC failure | Work Order pointer + QC_RETURN | STATION_RETURN | `station-worker.md`, `construction.md` |
-| `PROD.QC` | Run QC gate sequence on station output | Branch + dossier pointer | QC_RETURN with Gate Report | `inspector.md`, `verification.md`, `templates.md` |
+| `INTEG.SURVEY` | Standard survey: dossier -> plots -> compile -> validate | Dossier (reference) pointer | INTEGRATION_RETURN with Validation Reports | `integration-chief.md`, `integration.md`, `receiving.md`, `plotting.md`, `compilation.md`, `validation.md` |
+| `INTEG.FIX` | Calibration fix: delta -> targeted plots -> fix -> validate | Dossier (delta) pointer | INTEGRATION_RETURN with Validation Reports | `integration-chief.md`, `integration.md`, `receiving.md`, `plotting.md`, `compilation.md`, `validation.md` |
+| `INTEG.RESUME` | Resume job from a checkpoint | Checkpoint artifact pointer | INTEGRATION_RETURN | `integration-chief.md`, `integration.md` + department file per checkpoint stage |
+| `INTEG.COMPILE` | Compile deliverables per Integration Plot at a station | Integration Plot pointer + branch | COMPILE_RETURN | `integration-engineer.md`, `compilation.md` |
+| `INTEG.REWORK` | Rework station deliverables after validation failure | Integration Plot pointer + VALIDATION_RETURN | COMPILE_RETURN | `integration-engineer.md`, `compilation.md` |
+| `INTEG.VALIDATE` | Run validation gate sequence on station output | Branch + dossier pointer | VALIDATION_RETURN with Validation Report | `inspector.md`, `validation.md`, `templates.md` |
 
 ---
 
 ## Instruction Spec Structure
 
 Each instruction in the catalog has:
-- **ID** — unique, namespaced by division
-- **Division** — which division processes this
+- **ID** — unique, namespaced by department
+- **Department** — which department processes this
 - **Description** — one sentence
 - **Required Artifacts** — artifact pointers that must accompany this instruction
 - **Return Contract** — which RETURN shape the agent must produce
@@ -102,4 +102,4 @@ severity and annotation naming the gap.
 | `STRUCTURAL_CONFLICT` | Merge conflicts beyond rework scope | terminal | Admiral surfaces to Director via BRIEFING |
 | `CONTEXT_EXHAUSTION` | Agent hit context capacity before completing protocol | routine | Admiral re-launches Captain with MISSION_BRIEF + checkpoint |
 | `MERGE_BLOCKED` | PR cannot be merged (permissions, protected branch, conflicts) | terminal | Admiral surfaces to Director via BRIEFING |
-| `QA_DATA` | Model Shop needs QA ticket reconciliation data | routine | Admiral routes via Captain to Intel with `INTEL.COLLECT.QA_FINDINGS` |
+| `QA_DATA` | Integration needs QA ticket reconciliation data | routine | Admiral routes via Captain to Intel with `INTEL.COLLECT.QA_FINDINGS` |
