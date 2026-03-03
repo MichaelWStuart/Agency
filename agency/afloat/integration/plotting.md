@@ -3,14 +3,14 @@ Moored: Fractional Distillation (Petroleum Refining)
 
 > Iterative refinement engine. Takes intelligence artifacts, assays for
 > completeness, resolves gaps through escalation (RESOLVE), and decomposes
-> into Work Orders.
+> into Integration Plots.
 
 ---
 
 ## Department I/O
 
 **Input:** Intelligence artifacts (dossier, scope, landscape, coordination findings) via `jobs/inventory.md`
-**Output:** Sequential Work Orders (`jobs/wo-{N}.md`)
+**Output:** Sequential Integration Plots (`jobs/ip-{N}.md`)
 **Enrichment artifact:** `jobs/feedstock.md` — accumulates resolved findings across Assay loops
 
 ### Log Events
@@ -43,7 +43,7 @@ Intelligence artifacts (dossier, scope, landscape, coordination)
 ```
 
 Planning is inline. No sub-agents. Escalation flows through the
-Model Shop Chief, who checkpoints and returns ESCALATION to Captain.
+Integration Chief, who checkpoints and returns ESCALATION to Captain.
 
 ---
 
@@ -85,7 +85,7 @@ Distillation mooring (Planning header).
 
 ### Scope Authority
 
-Model Shop does not make independent scope decisions. Scope is
+Integration does not make independent scope decisions. Scope is
 determined by three sources: (1) scope CSV "In Scope" rows,
 (2) mission `exclusions`, (3) mission `overrides`. Size estimates
 (`fix_scope: S/M/L`) affect fractionation — how work is split into
@@ -95,7 +95,7 @@ stays in scope.
 **Finding interpretation:** Planning consumes dossier gap severity and
 priority as-is. It does not re-classify severity. Priority bands
 (P0-P3) drive fractionation order. Severity drives nothing in
-Model Shop — it is Intelligence's assessment, consumed by Verification.
+Integration — it is Intelligence's assessment, consumed by Validation.
 
 ### Assay Checks
 
@@ -112,7 +112,7 @@ Model Shop — it is Intelligence's assessment, consumed by Verification.
    Filter: exclude items outside scope CSV "In Scope" rows.
    **Override rule:** If the mission manifest contains an `overrides` section,
    items listed there are IN SCOPE regardless of size estimates, fix_scope
-   classifications, or any other Model Shop-internal judgment. Mission
+   classifications, or any other Integration-internal judgment. Mission
    overrides are Director-authorized and binding — do not exclude them.
 8. **Completeness** — does the feedstock contain everything needed
    to cut WOs? Are there domain gaps, unclear boundaries, missing
@@ -124,7 +124,7 @@ When Assay finds gaps, three resolution paths:
 
 | Gap Type | Resolution | Mechanism |
 |---|---|---|
-| Resolvable within Model Shop | Orchestrator resolves inline | Re-read dossier, cross-reference artifacts, infer from landscape |
+| Resolvable within Integration | Orchestrator resolves inline | Re-read dossier, cross-reference artifacts, infer from landscape |
 | Needs Intelligence collection | Orchestrator escalates to Captain | ESCALATION with NEED: `REFERENCE_EVIDENCE` or `IMPLEMENTATION_EVIDENCE` |
 | Needs additional scope data | Orchestrator escalates to Captain | ESCALATION with NEED: `SCOPE_DATA` |
 
@@ -132,21 +132,21 @@ When Assay finds gaps, three resolution paths:
 carefully, cross-references findings, or infers missing data from the
 landscape. The feedstock is enriched with the resolution. Loop continues.
 
-**Escalation:** The Orchestrator cannot resolve the gap within Model Shop's
+**Escalation:** The Orchestrator cannot resolve the gap within Integration's
 scope (INTAKE — only Intelligence produces intelligence). The Orchestrator:
 1. Writes current feedstock state to checkpoint
 2. Returns ESCALATION to Captain: `NEED: {need_id}`, `CONTEXT: {gap description}`, `CHECKPOINT: jobs/checkpoints/planning-{timestamp}/`
-3. Captain routes to Intelligence (sibling division)
+3. Captain routes to Intelligence (sibling department)
 4. Intelligence returns findings
-5. Captain re-launches Model Shop with `PROD.RESUME` + enriched artifacts
+5. Captain re-launches Integration with `INTEG.RESUME` + enriched artifacts
 6. Orchestrator resumes, Planning re-runs Assay with new data
 7. Loop continues until Assay passes
 
 ---
 
-## Calibration-Mode Fractionation (`PROD.FIX`)
+## Calibration-Mode Fractionation (`INTEG.FIX`)
 
-When the instruction is `PROD.FIX` and the dossier is a delta (gaps
+When the instruction is `INTEG.FIX` and the dossier is a delta (gaps
 with severity + fix_scope), the Assay loop is minimal — the delta
 already has the decomposition. Skip the generic "discover the
 landscape" Assay flow and cut directly:
@@ -178,10 +178,10 @@ All capacity constraints from generic Fractionation still apply.
 **Runs inline** — needs the full picture.
 
 **Input:** Pure feedstock (`jobs/feedstock.md`)
-**Output:** Sequential Work Orders
+**Output:** Sequential Integration Plots
 
-Work Orders are sequential — WO N depends on WO N-1 being merged
-to `dev`. Each WO is self-contained with everything [CONSTRUCTION]
+Integration Plots are sequential — WO N depends on WO N-1 being merged
+to `dev`. Each WO is self-contained with everything [COMPILATION]
 needs to execute.
 
 Fractionation is independent analysis. If the incoming material
@@ -217,7 +217,7 @@ A 9-deliverable WO will exhaust context before QC runs. Cut smaller.
    Every item in the manifest must appear in exactly one WO.
    If any item is unassigned, fractionation is incomplete.
 
-**Produces:** `jobs/wo-{N}.md`
+**Produces:** `jobs/ip-{N}.md`
 
 ---
 
@@ -229,21 +229,21 @@ artifacts as a stage-boundary checkpoint:
 ```
 jobs/checkpoints/planning-{timestamp}/
   feedstock.md       # immutable copy of feedstock at this point
-  wo-1.md            # immutable copy of WO-1 (post-fractionation only)
-  wo-N.md            # immutable copy of WO-N (post-fractionation only)
+  ip-1.md            # immutable copy of IP-1 (post-fractionation only)
+  ip-N.md            # immutable copy of IP-N (post-fractionation only)
 ```
 
 This enables:
 - **Rewind:** "rewind to Planning" -> re-run from checkpoint
-- **Escalation resume:** Model Shop resumes from checkpoint after
+- **Escalation resume:** Integration resumes from checkpoint after
   Captain routes to Intelligence and returns enriched artifacts
 
 ---
 
 ## Feed-Forward
 
-Work Orders produced -> WO-1 dispatches to [CONSTRUCTION] immediately.
-No human gate between Planning and Construction. The protocol is the
+Integration Plots produced -> IP-1 dispatches to [COMPILATION] immediately.
+No human gate between Plotting and Compilation. The protocol is the
 approval — if fractionation completed, production starts.
-Work Order N depends on Work Order N-1. Ship Gate (`construction.md`)
-enforces this — WO-N+1 does not enter Receiving until WO-N is merged.
+Integration Plot N depends on Integration Plot N-1. Ship Gate (`compilation.md`)
+enforces this — IP-N+1 does not enter Receiving until IP-N is merged.

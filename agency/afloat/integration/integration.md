@@ -1,4 +1,4 @@
-# Model Shop
+# Integration
 
 > A job enters. Verified product exits.
 
@@ -6,7 +6,7 @@
 
 ## Invocation
 
-Describe the job. Point at an artifact. Or both. Model Shop always
+Describe the job. Point at an artifact. Or both. Integration always
 starts at Receiving.
 
 ---
@@ -14,10 +14,10 @@ starts at Receiving.
 ## The Line
 
 ```
-[RECEIVING] -> [PLANNING] -> [CONSTRUCTION] -> [VERIFICATION]
+[RECEIVING] -> [PLOTTING] -> [COMPILATION] -> [VALIDATION]
 ```
 
-Not every job starts at [PLANNING]. [RECEIVING] classifies the
+Not every job starts at [PLOTTING]. [RECEIVING] classifies the
 material and determines where on the line it enters.
 
 ---
@@ -28,12 +28,12 @@ The orchestrator dispatches work. It does not do work.
 
 **Inline** (small, keeps orchestrator context clean):
 - [RECEIVING] — classification, inventory
-- [PLANNING] — Assay loop, feedstock enrichment, Fractionation
-- [CONSTRUCTION] — Receiving, Routing
+- [PLOTTING] — Assay loop, feedstock enrichment, Fractionation
+- [COMPILATION] — Receiving, Routing
 
 **Sub-agents** (clean I/O contracts, no information lost):
-- [CONSTRUCTION] stations — build per STATION_BRIEF, return STATION_RETURN
-- [VERIFICATION] — orchestrator-dispatched after station return via QC_BRIEF, return QC_RETURN
+- [COMPILATION] stations — build per COMPILE_BRIEF, return COMPILE_RETURN
+- [VALIDATION] — orchestrator-dispatched after station return via VALIDATION_BRIEF, return VALIDATION_RETURN
 
 Sub-agents load their own department files and shared tooling.
 The orchestrator receives concise results: status + artifact paths.
@@ -42,26 +42,26 @@ Only use sub-agents where the interface is clean — clearly defined
 inputs and outputs. When the boundary would lose information, keep
 the work inline.
 
-### Station -> Verification Flow
+### Station -> Validation Flow
 
 The orchestrator manages the station-verification cycle:
-1. Dispatch Station Worker with STATION_BRIEF (PROD.BUILD)
-2. Receive STATION_RETURN
-3. Dispatch Inspector with QC_BRIEF (PROD.QC)
-4. Receive QC_RETURN
-5. If QC FAIL: dispatch Station Worker with STATION_BRIEF (PROD.REWORK), go to step 2
-6. If QC PASS: return MODEL_SHOP_RETURN to Captain (Captain handles docking)
+1. Dispatch Integration Engineer with COMPILE_BRIEF (INTEG.COMPILE)
+2. Receive COMPILE_RETURN
+3. Dispatch Inspector with VALIDATION_BRIEF (INTEG.VALIDATE)
+4. Receive VALIDATION_RETURN
+5. If Validation FAIL: dispatch Integration Engineer with COMPILE_BRIEF (INTEG.REWORK), go to step 2
+6. If Validation PASS: return INTEGRATION_RETURN to Captain (Captain handles docking)
 
 ### Escalation Protocol (RESOLVE)
 
-When Planning Assay finds gaps outside Model Shop's scope:
+When Planning Assay finds gaps outside Integration's scope:
 
 1. **Checkpoint** — write current feedstock + any WOs to
    `jobs/checkpoints/planning-{timestamp}/`
-2. **Return ESCALATION** — `STATUS: escalation` in MODEL_SHOP_RETURN
+2. **Return ESCALATION** — `STATUS: escalation` in INTEGRATION_RETURN
    with NEED, CONTEXT, ARTIFACTS, and CHECKPOINT fields
-3. **Captain handles** — routes to sibling division (typically Intelligence)
-4. **Resume** — Captain re-launches Model Shop with `PROD.RESUME` +
+3. **Captain handles** — routes to sibling department (typically Intelligence)
+4. **Resume** — Captain re-launches Integration with `INTEG.RESUME` +
    enriched artifact pointers. Orchestrator loads checkpoint, Planning
    resumes Assay loop with new data.
 
@@ -75,9 +75,9 @@ operations identify the gap; the Orchestrator executes the protocol.
 ```
 jobs/
 ├── inventory.md      [RECEIVING] writes, all departments read
-├── feedstock.md      [PLANNING] operations enrich, Assay reads
-├── wo-1.md           [PLANNING] Fractionation produces
-├── wo-2.md           ...
+├── feedstock.md      [PLOTTING] operations enrich, Assay reads
+├── ip-1.md           [PLOTTING] Fractionation produces
+├── ip-2.md           ...
 └── log.md            All departments append
 ```
 
@@ -109,71 +109,71 @@ Detail is free text context.
 | Code | Department |
 |---|---|
 | RECV | Receiving |
-| PLAN | Planning |
-| CONSTR | Construction |
-| VERIF | Verification |
-| PROD | Division-wide |
+| PLOT | Plotting |
+| COMPILE | Compilation |
+| VALID | Validation |
+| INTEG | Department-wide |
 
 ### Event Codes
 
 | Dept | Event | Meaning |
 |---|---|---|
-| RECV | RECEIVED | Job entered Model Shop |
+| RECV | RECEIVED | Job entered Integration |
 | RECV | CLASSIFIED | Material type determined |
 | RECV | QUARANTINED | Artifacts quarantined from git index |
 | RECV | DISPATCHED | Sent to entry department |
-| PLAN | OP_START | Operation launched |
-| PLAN | OP_COMPLETE | Operation returned findings |
-| PLAN | ASSAY_START | Purity check started |
-| PLAN | ASSAY_PASS | Feedstock is pure |
-| PLAN | ASSAY_FAIL | Impurities remain |
-| PLAN | FRAC_START | Fractionation started |
-| PLAN | FRAC_COMPLETE | WOs cut |
-| CONSTR | WO_START | Work order production started |
-| CONSTR | WO_HELD | WO blocked on dependency merge |
-| CONSTR | WO_RELEASED | Dependency merged, WO released |
-| CONSTR | WO_SKIPPED | WO already shipped, skipping |
-| CONSTR | WO_RESUMED | WO resuming from prior state |
-| CONSTR | STATION_START | Station branch created, work begun |
-| CONSTR | COMMIT | Code committed |
-| CONSTR | STATION_DONE | Station deliverables complete |
-| CONSTR | REWORK | Sent back from Verification |
-| VERIF | QC_START | QC gate sequence started |
-| VERIF | GATE_PASS | Individual gate passed (detail: gate name) |
-| VERIF | GATE_FAIL | Individual gate failed |
-| VERIF | VERDICT_PASS | All gates passed |
-| VERIF | VERDICT_FAIL | Gate report: rework needed |
-| PROD | ESCALATION | Scope gap escalated to Captain (RESOLVE) |
-| PROD | RESUMED | Job resumed from checkpoint |
-| PROD | ESCALATION.TERMINAL | Terminal escalation |
-| PROD | WO_SHIPPED | WO verified (partial return milestone) |
-| PROD | RECOVERY | Corrective action taken |
-| PROD | JOB_DONE | All WOs verified |
+| PLOT | OP_START | Operation launched |
+| PLOT | OP_COMPLETE | Operation returned findings |
+| PLOT | ASSAY_START | Purity check started |
+| PLOT | ASSAY_PASS | Feedstock is pure |
+| PLOT | ASSAY_FAIL | Impurities remain |
+| PLOT | FRAC_START | Fractionation started |
+| PLOT | FRAC_COMPLETE | WOs cut |
+| COMPILE | WO_START | Integration Plot production started |
+| COMPILE | WO_HELD | WO blocked on dependency merge |
+| COMPILE | WO_RELEASED | Dependency merged, WO released |
+| COMPILE | WO_SKIPPED | WO already shipped, skipping |
+| COMPILE | WO_RESUMED | WO resuming from prior state |
+| COMPILE | STATION_START | Station branch created, work begun |
+| COMPILE | COMMIT | Code committed |
+| COMPILE | STATION_DONE | Station deliverables complete |
+| COMPILE | REWORK | Sent back from Validation |
+| VALID | QC_START | QC gate sequence started |
+| VALID | GATE_PASS | Individual gate passed (detail: gate name) |
+| VALID | GATE_FAIL | Individual gate failed |
+| VALID | VERDICT_PASS | All gates passed |
+| VALID | VERDICT_FAIL | Validation report: rework needed |
+| INTEG | ESCALATION | Scope gap escalated to Captain (RESOLVE) |
+| INTEG | RESUMED | Job resumed from checkpoint |
+| INTEG | ESCALATION.TERMINAL | Terminal escalation |
+| INTEG | WO_SHIPPED | WO verified (partial return milestone) |
+| INTEG | RECOVERY | Corrective action taken |
+| INTEG | JOB_DONE | All WOs verified |
 
 ### Sub-Agent Event Forwarding
 
-L3 sub-agents (Station Workers, Inspectors) operate in isolated context.
+L3 sub-agents (Integration Engineers, Inspectors) operate in isolated context.
 The orchestrator logs events on their behalf after receiving returns:
 
 | Return Type | Events to Emit |
 |---|---|
-| STATION_RETURN (complete) | `CONSTR/STATION_DONE` + `CONSTR/COMMIT` per deliverable |
-| QC_RETURN (pass) | `VERIF/QC_START` + `VERIF/GATE_PASS` per gate + `VERIF/VERDICT_PASS` |
-| QC_RETURN (fail) | `VERIF/QC_START` + `VERIF/GATE_FAIL` per failed gate + `VERIF/VERDICT_FAIL` |
-| Any (escalation) | `PROD/ESCALATION` with NEED |
+| COMPILE_RETURN (complete) | `COMPILE/STATION_DONE` + `COMPILE/COMMIT` per deliverable |
+| VALIDATION_RETURN (pass) | `VALID/QC_START` + `VALID/GATE_PASS` per gate + `VALID/VERDICT_PASS` |
+| VALIDATION_RETURN (fail) | `VALID/QC_START` + `VALID/GATE_FAIL` per failed gate + `VALID/VERDICT_FAIL` |
+| Any (escalation) | `INTEG/ESCALATION` with NEED |
 
 ### Captain Event Forwarding (Partial Returns)
 
-For multi-WO jobs, emit a partial `MODEL_SHOP_RETURN` after each WO
+For multi-WO jobs, emit a partial `INTEGRATION_RETURN` after each WO
 is verified. This gives the Captain per-WO visibility.
 
 After each WO verification pass:
-1. Log `PROD | WO_SHIPPED` with WO ID
-2. Return `MODEL_SHOP_RETURN` with `STATUS: partial`, `WO_COMPLETED: WO-N`,
+1. Log `INTEG | WO_SHIPPED` with WO ID
+2. Return `INTEGRATION_RETURN` with `STATUS: partial`, `WO_COMPLETED: IP-N`,
    `WO_REMAINING: {count}`
 3. Continue to next WO (Ship Gate -> Receiving)
 
-Final WO returns `STATUS: complete`, `WO_COMPLETED: WO-N`, `WO_REMAINING: 0`.
+Final WO returns `STATUS: complete`, `WO_COMPLETED: IP-N`, `WO_REMAINING: 0`.
 
 ### Log Initialization
 
@@ -195,10 +195,10 @@ Opens at `http://localhost:4242`. Watches `jobs/` for changes via SSE.
 
 ## Intelligence Input (INTAKE)
 
-Model Shop consumes intelligence products — it does not generate its own.
+Integration consumes intelligence products — it does not generate its own.
 Only Intelligence produces dossiers. The LAUNCH_BRIEF includes a dossier
 artifact pointer. Planning reads the dossier at that path for domain
-knowledge, behavioral reference, and gap analysis. Verification uses the dossier
+knowledge, behavioral reference, and gap analysis. Validation uses the dossier
 for Gates 3-4 (Browser QA and Network Behavior verification).
 
 ---
@@ -212,11 +212,11 @@ Sub-agents load department files and shared tooling as needed.
 
 | Tool | File | Used By |
 |---|---|---|
-| SOPs | `memory/project/conventions.md` | [CONSTRUCTION] stations |
-| Quality Manual | `memory/project/failure-class-catalog.md` | [VERIFICATION] |
-| Coordination Board | `memory/project/coordination.md` | [PLANNING], [CONSTRUCTION] Receiving |
-| Project Context | `memory/project/context.md` | [CONSTRUCTION] stations |
-| Dossier | `{pointer from LAUNCH_BRIEF}` | [PLANNING], [VERIFICATION] Gates 3-4 |
+| SOPs | `memory/project/conventions.md` | [COMPILATION] stations |
+| Quality Manual | `memory/project/failure-class-catalog.md` | [VALIDATION] |
+| Coordination Board | `memory/project/coordination.md` | [PLOTTING], [COMPILATION] Receiving |
+| Project Context | `memory/project/context.md` | [COMPILATION] stations |
+| Dossier | `{pointer from LAUNCH_BRIEF}` | [PLOTTING], [VALIDATION] Gates 3-4 |
 
 Note: `memory/` paths are relative to `~/.claude/projects/{hash}/`.
 Full path prefix: `~/.claude/projects/-Users-michaelstuart-dev-hubshot/`.
@@ -228,9 +228,9 @@ Full path prefix: `~/.claude/projects/-Users-michaelstuart-dev-hubshot/`.
 | Department | File | Role |
 |---|---|---|
 | Receiving | `receiving.md` | Receiving |
-| Planning | `planning.md` | Thinking |
-| Construction | `construction.md` | Building |
-| Verification | `verification.md` | Verifying |
+| Plotting | `plotting.md` | Plotting |
+| Compilation | `compilation.md` | Compiling |
+| Validation | `validation.md` | Validating |
 
 ---
 
@@ -247,7 +247,7 @@ manages the flow:
 
 ## Terminal Escalation (RESOLVE — Terminal Severity)
 
-Division-wide emergency stop. Use when escalation cascade cannot
+Department-wide emergency stop. Use when escalation cascade cannot
 resolve the problem and a fundamental failure has occurred.
 
 **Trigger when:**
@@ -259,7 +259,7 @@ resolve the problem and a fundamental failure has occurred.
 **What happens:**
 - Work stops immediately
 - Current state is preserved (branch, commits intact)
-- Problem is escalated via MODEL_SHOP_RETURN with `STATUS: escalation`
+- Problem is escalated via INTEGRATION_RETURN with `STATUS: escalation`
 - Failure logged to `jobs/log.md`
 
 ### Checkpoint Discipline
@@ -281,6 +281,6 @@ ESCALATION payload's ARTIFACTS list.
 
 | Limit | Value | Department |
 |---|---|---|
-| QC rework cycles | 5 | [VERIFICATION] -> [CONSTRUCTION] |
-| Browser QA retries | 5 | [VERIFICATION] |
-| Total terminal escalations per job | 8 | Division-wide |
+| QC rework cycles | 5 | [VALIDATION] -> [COMPILATION] |
+| Browser QA retries | 5 | [VALIDATION] |
+| Total terminal escalations per job | 8 | Department-wide |

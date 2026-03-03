@@ -262,7 +262,7 @@ modify the chart.
 | Admiral (B-001) | Mission planning, triage | Node statuses (surveyed vs discovered) to identify coverage gaps and collection priorities. `surveys` timestamps to assess recency. Region map for scoping. |
 | Chief Analyst (B-003) | Surface context assembly (step 6) | Outbound edges from target node for `downstream` field in SURFACE_CONTEXT. Adjacent nodes for `user_journey` context. Node type for capture depth guidance. |
 | Desk Analyst (B-006) | Analysis methodology | Applicable invariant bundle for the surface's node type. `observations_beyond_invariants` from prior cartography for awareness. |
-| Model Shop (B-004) | Navigation implementation | Edges to/from the surface being built. Shared components that appear on the target surface. Adjacent surfaces for integration testing. |
+| Integration (B-004) | Navigation implementation | Edges to/from the surface being built. Shared components that appear on the target surface. Adjacent surfaces for integration testing. |
 
 ---
 

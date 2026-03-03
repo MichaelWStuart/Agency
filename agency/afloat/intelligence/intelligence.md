@@ -204,7 +204,7 @@ Field Agents (B-005 Hawk, B-007 Kite) capture evidence. Desk Analysts
 Analyst dispatches both — never captures or synthesizes directly.
 
 Dispatch contracts: `contracts/payloads.md` (FIELD_BRIEF, DESK_BRIEF).
-Complement and constraints: `cadre/barracks/roster.md`.
+Complement and constraints: `shared/roster.json`.
 
 ---
 

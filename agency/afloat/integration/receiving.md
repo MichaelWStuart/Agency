@@ -1,6 +1,6 @@
 # Receiving
 
-> Receive & Classify. Every job enters the Model Shop here.
+> Receive & Classify. Every job enters the Integration here.
 
 ---
 
@@ -21,7 +21,7 @@ Determine what the material is and what state it is in.
 |---|---|---|
 | Crude | Unstructured input — idea, request, raw context | [PLANNING] |
 | Feedstock | Partially refined — has structure, contains impurities | [PLANNING] |
-| Work Order | Fully refined — complete, ready for production | [CONSTRUCTION] |
+| Integration Plot | Fully refined — complete, ready for production | [COMPILATION] |
 | Product | Code on a branch — built, not verified | [VERIFICATION] |
 | Verified Product | Code that passed Verification — ready for Captain docking | Captain |
 
@@ -51,7 +51,7 @@ someone already wrote.
 
 | Contaminant | Example | Action |
 |---|---|---|
-| WO outlines | "WO-1: CRUD, WO-2: Filters" | Strip. Planning cuts WOs. |
+| WO outlines | "IP-1: CRUD, IP-2: Filters" | Strip. Plotting cuts IPs. |
 | Implementation plans | Schema change plans, tRPC procedure specs, code inventory | Strip. Planning discovers the landscape. |
 | Prior production artifacts | Superseded WOs, old plans, accumulated structure from previous runs | Strip. Prior runs are not verified feedstock. |
 | Scope data | Tickets, features, capabilities, acceptance criteria | Keep. This is the job. |
@@ -115,6 +115,6 @@ All departments read from it. The orchestrator references it
 for dispatch decisions.
 
 Initialize `jobs/log.md` with the header from the Log Protocol
-(see SKILL.md). Log events: see `model-shop.md` Event Codes (RECV department).
+(see SKILL.md). Log events: see `integration.md` Event Codes (RECV department).
 
 Then feed forward to the entry department.

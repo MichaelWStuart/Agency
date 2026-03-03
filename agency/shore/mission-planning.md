@@ -12,8 +12,8 @@ Before dispatching the Captain, the Admiral prepares the mission:
 ### 1. Strategy Selection
 
 Determine strategy based on Director intent (see STRATEGY primitive):
-- **Survey:** Linear. Intelligence once → Model Shop once → done.
-- **Calibrate:** Iterative. Intelligence sweep → Model Shop fix →
+- **Survey:** Linear. Intelligence once → Integration once → done.
+- **Calibrate:** Iterative. Intelligence sweep → Integration fix →
   Intelligence verify → loop until convergence.
 
 ### 2. Collision Detection

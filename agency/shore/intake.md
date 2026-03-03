@@ -11,7 +11,7 @@
 ## Gate Ownership
 
 External gates (CI Gate, Review Gate) are **Admiral-owned**.
-The Captain (and divisions below) do NOT run CI monitoring or review
+The Captain (and departments below) do NOT run CI monitoring or review
 bot polling. This is a structural boundary — sub-agents that just built
 code are at context pressure and will optimize for completion over
 thoroughness on long-running external waits.
@@ -108,11 +108,11 @@ prevents completing Delivery, the Admiral must return
 **Output:** Merged code on target branch + ticket updates
 
 **Station delivery:**
-1. Squash merge station branch -> Work Order branch
+1. Squash merge station branch -> Integration Plot branch
 2. Delete station branch
 
-**Work Order delivery:**
-1. Squash merge Work Order branch -> `dev`
+**Integration Plot delivery:**
+1. Squash merge Integration Plot branch -> `dev`
 2. Update Linear tickets by type:
    - **Capability / Task** -> Merged (engineering terminal status)
    - **Feature** -> check promotion (see below)
@@ -129,7 +129,7 @@ prevents completing Delivery, the Admiral must return
    Check: every child issue state type == "completed"
    If yes: save_issue id={feature_id} state="Ready for QA"
    ```
-4. Delete Work Order branch
+4. Delete Integration Plot branch
 
 ### Pre-Return Assertion
 
@@ -142,7 +142,7 @@ Before composing final BRIEFING with delivery complete:
 
 ### Closeout
 
-**Input:** Completed Work Order delivery
+**Input:** Completed Integration Plot delivery
 **Output:** Cleanup + retrospective
 
 1. Delete all generated screenshot/image files
@@ -160,7 +160,7 @@ When CI or Review gates fail and code changes are needed:
    - Branch state, PR URL, failure details
    - Specific fix instructions (CI error, review findings)
 2. Dispatch Captain for a new dive
-3. Captain fixes within Model Shop, re-verifies, re-docks
+3. Captain fixes within Integration, re-verifies, re-docks
 4. Captain surfaces with new MISSION_RETURN
 5. Admiral re-enters intake pipeline at the appropriate gate
 

@@ -7,15 +7,15 @@
 
 ## Department I/O
 
-**Input:** Branch state (from Station Worker via orchestrator dispatch)
-**Output:** QC_RETURN with Gate Report
+**Input:** Branch state (from Integration Engineer via orchestrator dispatch)
+**Output:** VALIDATION_RETURN with Validation Report
 
 Verification runs as an independent sub-agent (BOUNDARY). The Inspector operates
 in complete isolation from the build context — no shared context with
-the Station Worker. This is true independence: the Inspector does not
+the Integration Engineer. This is true independence: the Inspector does not
 know what the builder intended, only what the product looks like.
 
-Log events: see `model-shop.md` Event Codes (VERIF department).
+Log events: see `integration.md` Event Codes (VALID department).
 
 ---
 
@@ -23,9 +23,9 @@ Log events: see `model-shop.md` Event Codes (VERIF department).
 
 Verification is structurally isolated from Construction.
 
-- The Inspector is dispatched by the orchestrator after Station Worker returns
+- The Inspector is dispatched by the orchestrator after Integration Engineer returns
 - The Inspector receives only the branch name, WO ID, and reference artifacts
-- The Inspector does not see Work Order intent, station values, or build rationale
+- The Inspector does not see Integration Plot intent, station values, or build rationale
 - Verification evaluates the product, not the process
 
 ---
@@ -60,7 +60,7 @@ Dev server running. Navigate affected pages.
 - Interactive features work
 - Visual consistency with reference app
 
-**Load (if available):** Dossier artifact at pointer path from QC_BRIEF.
+**Load (if available):** Dossier artifact at pointer path from VALIDATION_BRIEF.
 Use dossier findings as the reference for visual and behavioral verification.
 
 **Mandatory.** Cannot be skipped.
@@ -88,13 +88,13 @@ pnpm exec playwright test {relevant dir} --reporter=list
 ### 6. Verdict
 
 **Prerequisite — completeness check:** Before issuing a verdict, verify
-that gates 1-5 each have an explicit status in the Gate Report (see
+that gates 1-5 each have an explicit status in the Validation Report (see
 below). Gate 3 (Browser QA) CANNOT be N/A. If any gate is missing a
 verdict line -> the Verdict is **FAIL (incomplete report)**.
 
-All gates passed -> **QC PASS** -> return QC_RETURN with OVERALL_VERDICT: PASS
+All gates passed -> **Validation PASS** -> return VALIDATION_RETURN with OVERALL_VERDICT: PASS
 
-Any gate failed -> **QC FAIL** -> return QC_RETURN with OVERALL_VERDICT: FAIL
+Any gate failed -> **Validation FAIL** -> return VALIDATION_RETURN with OVERALL_VERDICT: FAIL
 and FAILURE_DETAILS listing each failed gate.
 
 New generalizable failure pattern identified -> **New Error Class:**
@@ -103,30 +103,30 @@ New generalizable failure pattern identified -> **New Error Class:**
 
 ---
 
-## Gate Report
+## Validation Report
 
-Every Verification run MUST produce a Gate Report per `templates.md` (gate-report-v1)
-as part of QC_RETURN. This is the sub-agent's proof of execution. The
+Every Verification run MUST produce a Validation Report per `templates.md` (validation-report-v1)
+as part of VALIDATION_RETURN. This is the sub-agent's proof of execution. The
 orchestrator uses it to verify that Verification actually ran — a bare "all gates
-passed" without a Gate Report is rejected.
+passed" without a Validation Report is rejected.
 
 **Rules:**
 - Every gate gets exactly one entry. Missing gates = incomplete = rejected.
 - Gate 3 cannot be N/A. It is always mandatory.
 - Gates 4 and 5 may be N/A with a reason.
 - FAIL entries must include the failure detail.
-- The Gate Report is included in QC_RETURN for orchestrator verification.
+- The Validation Report is included in VALIDATION_RETURN for orchestrator verification.
 
 ---
 
 ## Circuit Breakers
 
-See `model-shop.md` Circuit Breakers for canonical limits.
+See `integration.md` Circuit Breakers for canonical limits.
 Verification-relevant: rework cycles (5), browser QA retries (5).
 
 ---
 
 ## Feed-Forward
 
-On pass -> orchestrator returns MODEL_SHOP_RETURN to Captain (Captain handles docking)
-On fail -> orchestrator dispatches Station Worker for rework (PROD.REWORK)
+On pass -> orchestrator returns INTEGRATION_RETURN to Captain (Captain handles docking)
+On fail -> orchestrator dispatches Integration Engineer for rework (INTEG.REWORK)
