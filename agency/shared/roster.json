@@ -1,0 +1,105 @@
+{
+  "version": 3,
+  "entities": {
+    "B-001": {
+      "callsign": "Admiral",
+      "role": "Admiral",
+      "type": "orchestrator",
+      "department": null,
+      "tier": 0,
+      "parent": null,
+      "identity": "shore/admiral.md",
+      "maxConcurrent": 1
+    },
+    "B-002": {
+      "callsign": "Captain",
+      "role": "Captain",
+      "type": "orchestrator",
+      "department": null,
+      "tier": 1,
+      "parent": "B-001",
+      "identity": "afloat/captain.md",
+      "maxConcurrent": 1
+    },
+    "B-003": {
+      "callsign": "Analyst",
+      "role": "Chief Analyst",
+      "type": "orchestrator",
+      "department": "INTELLIGENCE",
+      "tier": 2,
+      "parent": "B-002",
+      "identity": "afloat/intelligence/chief-analyst.md",
+      "maxConcurrent": 1
+    },
+    "B-004": {
+      "callsign": "Hydro",
+      "role": "Integration Chief",
+      "type": "orchestrator",
+      "department": "INTEGRATION",
+      "tier": 2,
+      "parent": "B-002",
+      "identity": "afloat/integration/integration-chief.md",
+      "maxConcurrent": 1
+    },
+    "B-005": {
+      "callsign": "Hawk",
+      "role": "Field Agent",
+      "type": "worker",
+      "department": "INTELLIGENCE",
+      "tier": 3,
+      "parent": "B-003",
+      "identity": "afloat/intelligence/field-agent.md",
+      "maxConcurrent": 2
+    },
+    "B-006": {
+      "callsign": "Scribe",
+      "role": "Desk Analyst",
+      "type": "worker",
+      "department": "INTELLIGENCE",
+      "tier": 3,
+      "parent": "B-003",
+      "identity": "afloat/intelligence/desk-analyst.md",
+      "maxConcurrent": 1
+    },
+    "B-007": {
+      "callsign": "Kite",
+      "role": "Field Agent",
+      "type": "worker",
+      "department": "INTELLIGENCE",
+      "tier": 3,
+      "parent": "B-003",
+      "identity": "afloat/intelligence/field-agent.md",
+      "maxConcurrent": 2
+    },
+    "B-008": {
+      "callsign": "Atlas",
+      "role": "Integration Engineer",
+      "type": "worker",
+      "department": "INTEGRATION",
+      "tier": 3,
+      "parent": "B-004",
+      "identity": "afloat/integration/integration-engineer.md",
+      "maxConcurrent": 2
+    },
+    "B-009": {
+      "callsign": "Datum",
+      "role": "Inspector",
+      "type": "worker",
+      "department": "INTEGRATION",
+      "tier": 3,
+      "parent": "B-004",
+      "identity": "afloat/integration/inspector.md",
+      "maxConcurrent": 1
+    },
+    "B-010": {
+      "callsign": "Folio",
+      "role": "Integration Engineer",
+      "type": "worker",
+      "department": "INTEGRATION",
+      "tier": 3,
+      "parent": "B-004",
+      "identity": "afloat/integration/integration-engineer.md",
+      "maxConcurrent": 2
+    }
+  }
+}
