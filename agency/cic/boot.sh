@@ -19,7 +19,7 @@ MISSIONS_DIR="$MEMORY_DIR/missions"
 DOSSIERS_DIR="$MEMORY_DIR/dossiers"
 
 WORKSPACE_DIR="$HOME/.claude/agency-workspace"
-BULLETIN_PATH="$HOME/.claude/skills/agency/cadre/bulletin.md"
+BULLETIN_PATH="$HOME/.claude/skills/agency/shared/bulletin.md"
 EVENTS_DIR="$MEMORY_DIR/events"
 LOG_FILE="$DASHBOARD_DIR/.dashboard.log"
 

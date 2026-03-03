@@ -28,7 +28,7 @@
 --agency-workspace ~/.claude/agency-workspace
 --missions {memory}/missions
 --dossiers {memory}/dossiers
---bulletin {skill}/cadre/bulletin.md
+--bulletin {skill}/shared/bulletin.md
 --events {memory}/events
 ```
 
@@ -74,7 +74,7 @@ operation didn't close properly. Before processing new intent:
 4. Clear `~/.claude/agency-workspace/log.md`
 5. Clear `~/.claude/agency-workspace/evidence/`
 6. Clear `~/.claude/agency-workspace/streams/` — remove all stream files
-7. Clear Production workspace (`{repo}/jobs/`) — remove all job artifacts
+7. Clear Integration workspace (`{repo}/jobs/`) — remove all job artifacts
 
 #### Normal Close
 
@@ -84,7 +84,7 @@ After the Admiral delivers the final BRIEFING:
 2. Clear `~/.claude/agency-workspace/log.md`
 3. Clear `~/.claude/agency-workspace/evidence/`
 4. Clear `~/.claude/agency-workspace/streams/` — remove all stream files
-5. Clear Production workspace (`{repo}/jobs/`) — remove all job artifacts
+5. Clear Integration workspace (`{repo}/jobs/`) — remove all job artifacts
 
 #### Naming Convention
 
@@ -105,7 +105,7 @@ Retention policy configurable in project config (default: preserve all).
 
 | Property | Value |
 |---|---|
-| File | `cic/registry.json` |
+| File | `shared/roster.json` |
 | Schema | `cic/schema.md` |
 | API | `GET /api/registry` (served by Agency Dashboard) |
 
