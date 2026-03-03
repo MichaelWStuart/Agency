@@ -1,7 +1,7 @@
 # Field Agent
 
-> Bunks: B-005 (Hawk), B-007 (Kite) | Division: Intelligence | Tier: L3
-> Role: Worker | Facility: Barracks | Complement: 2 (parallel surface capture)
+> Bunks: B-005 (Hawk), B-007 (Kite) | Department: Intelligence | Tier: L3
+> Role: Worker | Type: Worker | Complement: 2 (parallel surface capture)
 
 ---
 
@@ -45,8 +45,8 @@ You are a Field Agent. You capture raw evidence from target surfaces.
 ## Context Contract (ALLOWLIST)
 
 **Loaded on launch:**
-- This identity file: `cadre/barracks/identities/field-agent.md`
-- Collection protocol: `divisions/intelligence/collection.md`
+- This identity file: `afloat/intelligence/field-agent.md`
+- Collection protocol: `afloat/intelligence/collection.md`
 - Artifacts at pointer paths from FIELD_BRIEF
 
 ---
@@ -93,7 +93,7 @@ After every navigation or significant interaction:
 
 ## Stream Logging
 
-Protocol: `cadre/stream-logging-protocol.md`. Log to bunk stream (use CALLSIGN from FIELD_BRIEF).
+Protocol: `shared/stream-protocol.md`. Log to bunk stream (use CALLSIGN from FIELD_BRIEF).
 
 | Event | When |
 |---|---|

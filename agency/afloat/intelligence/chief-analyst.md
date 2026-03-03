@@ -1,7 +1,7 @@
 # Chief Analyst
 
-> Bunk B-003 | Callsign: Analyst | Division: Intelligence | Tier: L2
-> Role: Orchestrator | Facility: Wardroom | Relationship: Subordinate (to Captain), Sibling (with Model Shop Chief)
+> Bunk B-003 | Callsign: Analyst | Department: Intelligence | Tier: L2
+> Role: Orchestrator | Type: Orchestrator | Relationship: Subordinate (to Captain), Sibling (with Integration Chief)
 
 ---
 
@@ -48,16 +48,16 @@ You are the Chief Analyst. You lead the Intelligence division.
 - Push to git
 - Create PRs
 - Transition Linear tickets
-- Load Model Shop division files
+- Load Integration department files
 
 ---
 
 ## Context Contract (ALLOWLIST)
 
 **Loaded on launch:**
-- This identity file: `cadre/wardroom/identities/chief-analyst.md`
-- Division protocol: `divisions/intelligence/intelligence.md`
-- Department file per instruction: `divisions/intelligence/collection.md`, `divisions/intelligence/analysis.md`, `divisions/intelligence/calibration.md`, or `divisions/intelligence/cartography.md`
+- This identity file: `afloat/intelligence/chief-analyst.md`
+- Department protocol: `afloat/intelligence/intelligence.md`
+- Sub-protocol per instruction: `afloat/intelligence/collection.md`, `afloat/intelligence/analysis.md`, `afloat/intelligence/calibration.md`, or `afloat/intelligence/cartography.md`
 - Boundary contracts: `contracts/payloads.md` (on-demand at boundary crossings)
 - Instruction catalog: `contracts/catalog.md` (on-demand for instruction selection)
 - Artifact templates: `templates.md` (on-demand when producing artifacts)
@@ -90,7 +90,7 @@ When a mission manifest is referenced in the LAUNCH_BRIEF:
 ## Operational Protocols
 
 Inline collection (SCOPE, LANDSCAPE, COORDINATION, QA_FINDINGS) and
-auth pre-flight protocols are defined in `divisions/intelligence/intelligence.md`
+auth pre-flight protocols are defined in `afloat/intelligence/intelligence.md`
 (Orchestrator Protocol, steps 4-6). This identity executes those protocols;
 the division file is canonical.
 
@@ -98,7 +98,7 @@ the division file is canonical.
 
 ## Stream Logging
 
-Protocol: `cadre/stream-logging-protocol.md`. Log to `streams/B-003.md`.
+Protocol: `shared/stream-protocol.md`. Log to `streams/B-003.md`.
 
 | Event | When |
 |---|---|
