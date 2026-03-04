@@ -191,3 +191,29 @@ severity and annotation naming the gap.
 | `CONTEXT_EXHAUSTION` | Agent hit context capacity before completing protocol | routine | Admiral re-launches Captain with MISSION_BRIEF + checkpoint |
 | `MERGE_BLOCKED` | PR cannot be merged (permissions, protected branch, conflicts) | terminal | Admiral surfaces to Director via BRIEFING |
 | `QA_DATA` | Integration needs QA ticket reconciliation data | routine | Admiral routes via Captain to Intel with `INTEL.COLLECT.QA_FINDINGS` |
+
+---
+
+## Failure Class Catalog
+
+Known failure patterns. When a finding matches a failure class, tag it
+with the class ID. This accelerates root cause identification and
+guides Production toward the correct fix shape.
+
+| Class | Name | Pattern | Fix Shape |
+|---|---|---|---|
+| FC-12 | Persistence Round-Trip | Forward path (UI→storage) built, reverse path (storage→UI hydration) missing or lossy. State saves correctly but the page cannot reconstruct UI from persisted form on load/reload. | Build the reverse-mapping function — the hydration path that reads persisted state and reconstructs UI state. |
+| FC-13 | Route Lifecycle Preservation | Stateful component placed at page level inside a dynamic route segment. Component remounts on route param change, destroying state. | Move stateful component above the dynamic segment boundary (into layout) so it persists across route changes. |
+
+### Core Principle — Forward-Path Bias
+
+When building features, developers naturally follow the user's action
+flow (create → save → confirm). Two categories of flow are systematically
+missed unless explicitly mandated:
+
+1. **Reverse paths** — load → hydrate UI from persisted state
+2. **Lifecycle paths** — navigate → preserve state across route changes
+
+Phase 2c, Phase 3b, Layer 5, navigation scenarios, convergence stress
+tests, and the root cause layer field all exist to counteract this bias
+at different points in the Intelligence pipeline.

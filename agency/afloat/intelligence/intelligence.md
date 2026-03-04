@@ -64,7 +64,14 @@ The Chief Analyst (B-003) orchestrates Intelligence operations:
      `~/.claude/agency-workspace/evidence/{domain}/scope-findings.md`.
    - **LANDSCAPE:** Scan codebase for existing domain assets (routes,
      components, hooks, utilities). Cross-reference against planned
-     deliverables. Write findings to
+     deliverables. Additionally, map route/mount architecture:
+     - Dynamic route segments (e.g., `[viewIdLabel]`, `[objectId]`)
+       and which components sit inside vs. above them
+     - Page-level vs. layout-level component boundaries — which
+       components remount on route param change vs. persist
+     - State persistence boundaries — where state is lost due to
+       component tree position relative to route segments
+     Write findings to
      `~/.claude/agency-workspace/evidence/{domain}/landscape-findings.md`.
    - **COORDINATION:** Check open PRs via `gh` CLI, Linear for
      in-progress work, team assignments. Identify overlap risks. Write

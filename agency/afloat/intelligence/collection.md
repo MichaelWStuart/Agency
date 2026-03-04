@@ -157,6 +157,24 @@ For each validation error triggered:
 3. Record whether the field is highlighted/marked
 4. Record recovery: what action clears the error?
 
+### Phase 2c — Navigation Lifecycle Scenarios
+
+After Phase 2b completes, exercise these navigation and lifecycle
+scenarios on every stateful surface. These catch forward-path bias —
+state that works when built but breaks when the user navigates.
+
+| Scenario | What to Test |
+|---|---|
+| Tab/view switch | Switch to another tab/view, switch back. Record: is all state preserved? Filters, selections, scroll position, open panels. |
+| Back/forward | Navigate away via link/action, press browser back. Record: does the surface restore correctly or reset? |
+| Deep link entry | Copy current URL (with state-bearing params), open in new tab. Record: does the surface reconstruct from URL alone? |
+| Cross-surface round-trip | Navigate to a related surface (e.g., detail → list → detail). Record: is the origin surface's state intact on return? |
+| Write mode interaction | If surface has inline edit or create mode, enter edit, navigate away without saving, return. Record: is draft state preserved or discarded? What's the expected behavior? |
+
+**Producing recordings:** Each scenario produces an interaction recording
+under `interactions/lifecycle-{scenario-slug}.md`. Include pre/post
+snapshots and explicit state comparison (which fields survived, which reset).
+
 ### Phase 3 — Stateful (Post-Action Surfaces)
 
 After submit, creation, or navigation: treat result as new surface.
@@ -176,6 +194,37 @@ between captures.
 4. **Error path:** Submit with intentionally invalid data (from Phase 2b
    edge cases). Record error display, recovery path, and form state
    preservation.
+
+### Phase 3b — Lifecycle Verification
+
+After Phase 3, verify state persistence across browser lifecycle events.
+This catches persistence round-trip failures — state that saves correctly
+but cannot hydrate back into the UI.
+
+**Mandatory lifecycle checks:**
+
+| Check | Procedure | What to Record |
+|---|---|---|
+| Reload | Perform action that persists state (filter, create, edit). Hard reload (Cmd+R). Record: does UI reconstruct from persisted state? | Pre-reload snapshot vs post-reload snapshot. List every field that survived and every field that reset. |
+| Fresh load with pre-existing state | Ensure persisted state exists (from prior action). Open surface in a new tab via URL. Record: does surface hydrate correctly from URL + stored state? | Snapshot comparison. Note any flash of default state before hydration. |
+| Navigation cycle | From surface with state, navigate away (link, not back button), then navigate back to same URL. Record: is state preserved through the navigation cycle? | Pre-navigation snapshot vs post-return snapshot. |
+
+**State dimension enumeration:**
+
+Before running lifecycle checks, enumerate the state dimensions present
+on the surface. This prevents partial verification.
+
+| Dimension | Examples |
+|---|---|
+| URL-carried state | Query params, hash fragments, dynamic route segments |
+| Client-side persisted | localStorage, sessionStorage, IndexedDB |
+| Server-side persisted | API-backed filters, saved views, user preferences |
+| Component-local state | Open/closed panels, scroll position, selection |
+| Derived state | Computed from URL + persisted (e.g., filter pills from URL params) |
+
+For each dimension found, verify it survives all three lifecycle checks.
+Flag any dimension that persists forward (UI→storage) but fails reverse
+(storage→UI) as a **persistence round-trip failure**.
 
 ---
 

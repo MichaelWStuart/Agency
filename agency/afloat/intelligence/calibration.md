@@ -50,12 +50,29 @@ For each gap found between reference and implementation:
 | Surface | Where the gap appears |
 | Component | Logical group containing the element |
 | Element | Specific element, if applicable |
-| Layer | Comparison layer (1=surface, 2=element, 3=state, 4=behavior) |
-| Category | missing, type_mismatch, content_mismatch, behavior_mismatch, state_mismatch, cosmetic |
+| Layer | Comparison layer (1=surface, 2=element, 3=state, 4=behavior, 5=lifecycle) |
+| Category | missing, type_mismatch, content_mismatch, behavior_mismatch, state_mismatch, persistence_mismatch, cosmetic |
 | Severity | critical, major, minor, cosmetic |
+| Root Cause Layer | data, state_management, component_lifecycle, framework_architecture, ui_logic, persistence |
 | Fix Scope | S (single file), M (2-5 files), L (6+ files) |
 | Evidence | Pointers to reference + implementation evidence |
 | Expected/Actual | What the reference does vs. what we do |
+
+### Root Cause Layer
+
+The root cause layer helps Production choose the correct fix depth.
+A symptom at Layer 4 (behavior) may have its root cause at any depth:
+
+| Root Cause Layer | What it means | Fix depth |
+|---|---|---|
+| `data` | API returns wrong/missing data | Backend or API call fix |
+| `state_management` | State exists but isn't wired correctly | Store/hook/reducer fix |
+| `component_lifecycle` | Component mounts/unmounts at wrong time | Mount boundary or key fix |
+| `framework_architecture` | Layout/route structure causes remount or state loss | Route tree or layout restructure |
+| `ui_logic` | Rendering logic incorrect for given state | Component render logic fix |
+| `persistence` | Forward path (save) works but reverse path (hydrate) missing or lossy | Hydration/restore function fix |
+
+Assign based on where the fix must land, not where the symptom appears.
 
 ---
 
@@ -113,6 +130,29 @@ Otherwise                                          -> loop_targeted
 
 The Director always makes the final call. The matrix produces a
 recommendation, not a binding decision.
+
+---
+
+## Convergence Stress Tests
+
+Mandatory for any finding with root cause layer = `state_management`,
+`component_lifecycle`, `framework_architecture`, or `persistence`.
+These tests verify that a fix survives real user navigation patterns,
+not just the happy path.
+
+| Test | Procedure | Pass Criteria |
+|---|---|---|
+| Reload | Apply fix, perform action, hard reload | State reconstructs; UI matches pre-reload |
+| Navigation cycle | Apply fix, navigate away via in-app link, navigate back | State preserved through round-trip |
+| Pre-existing state | Ensure persisted state from prior session exists, load surface fresh | Surface hydrates correctly from stored state |
+| Cross-tab | Copy URL with state params, open in new tab | New tab reconstructs identical state |
+
+**When to run:** During convergence checking (Step 2 — Synthesis).
+The Desk Analyst runs these stress tests on any finding classified
+RESOLVED where the original root cause layer was state/lifecycle/architecture/persistence.
+A finding that passes functional verification but fails a stress test
+is classified as **REMAINING** (not RESOLVED), with annotation:
+`stress_test_fail:{test_name}`.
 
 ---
 

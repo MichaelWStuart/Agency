@@ -27,22 +27,28 @@
 
 ---
 
-## 4-Layer Comparison Methodology
+## 5-Layer Comparison Methodology
 
-Comparison proceeds through four layers. Each layer produces verdicts
+Comparison proceeds through five layers. Each layer produces verdicts
 per item: **MATCHED** | **MISSING** | **EXTRA** | **MISMATCHED**
 
 ```
-Layer 1: Surface Inventory  — Do the same surfaces exist?
-Layer 2: Element Inventory  — Do they contain the same elements?
-Layer 3: Element State      — Do elements have the same defaults/content/options?
-Layer 4: Interaction Behavior — Do triggers produce the same outcomes?
+Layer 1: Surface Inventory      — Do the same surfaces exist?
+Layer 2: Element Inventory      — Do they contain the same elements?
+Layer 3: Element State          — Do elements have the same defaults/content/options?
+Layer 4: Interaction Behavior   — Do triggers produce the same outcomes?
+Layer 5: State Lifecycle        — Does persisted state survive reload, navigation, and hydration?
 ```
 
 **Layer 1** uses surface names/URLs.
 **Layer 2** uses element manifests from evidence.
 **Layer 3** uses resting-state snapshots.
 **Layer 4** uses behavioral sequence recordings from interaction captures.
+**Layer 5** uses Phase 3b lifecycle verification recordings. Compares
+state persistence behavior: does the implementation preserve and
+reconstruct state across reload, fresh load, and navigation cycle the
+same way the reference does? Verdicts apply per state dimension
+(URL-carried, client-persisted, server-persisted, component-local, derived).
 
 ### Enhanced Evidence Types
 
@@ -64,7 +70,7 @@ verification.
 
 ## Behavioral Fidelity Taxonomy
 
-6 categories for gap classification:
+7 categories for gap classification:
 
 | Category | Definition | Example |
 |---|---|---|
@@ -73,6 +79,7 @@ verification.
 | `content_mismatch` | Same component, different text/options | Wrong placeholder, wrong popup text |
 | `behavior_mismatch` | Same content, different interaction result | Invalid phone defaults to US instead of error |
 | `state_mismatch` | Same element, different default/initial state | Contact owner not pre-populated |
+| `persistence_mismatch` | State persists but UI can't reconstruct from persisted form | Filters save to URL but page can't restore filter UI from URL params on load |
 | `cosmetic` | Visual differences that don't affect function | Label wording, spacing |
 
 ---
@@ -105,15 +112,19 @@ verification.
 5. **Layer 4 — Interaction Behavior:** For each matched element with
    interaction recordings, compare behavioral sequences. Flag
    MISMATCHED behaviors.
-6. **Classify gaps** using structured finding format:
+6. **Layer 5 — State Lifecycle:** For each surface with Phase 3b
+   lifecycle evidence, compare state persistence behavior per dimension.
+   Flag MISMATCHED dimensions where the implementation fails to hydrate
+   state that the reference preserves.
+7. **Classify gaps** using structured finding format:
    - Surface, component, element, layer
-   - Category (from 6-category taxonomy)
+   - Category (from 7-category taxonomy)
    - Severity: critical, major, minor, cosmetic
    - Expected (reference) vs actual (implementation)
    - Fix scope: S (single file), M (2-5 files), L (6+ files)
-7. **QA cross-reference** (if prior findings provided — see below)
-8. **Produce dossier** per template (`templates.md`: dossier-delta-v1)
-9. **Write** to `~/.claude/agency-workspace/dossiers/{domain}-delta-{timestamp}.yaml`
+8. **QA cross-reference** (if prior findings provided — see below)
+9. **Produce dossier** per template (`templates.md`: dossier-delta-v1)
+10. **Write** to `~/.claude/agency-workspace/dossiers/{domain}-delta-{timestamp}.yaml`
 
 ---
 
@@ -158,6 +169,11 @@ When analyzing evidence, identify recurring patterns:
 - **Interaction patterns** — user action sequences
 - **Loading patterns** — skeleton, spinner, progressive
 - **Error patterns** — how errors are displayed and recovered from
+- **State lifecycle patterns** — full create→persist→hydrate cycle;
+  does state survive the round-trip or is the reverse path (hydration)
+  incomplete?
+- **Write mode patterns** — how inline edit, create, and draft states
+  interact with navigation and persistence
 
 Patterns inform the dossier's recommendation section — they help
 Production understand the "shape" of the implementation, not just
