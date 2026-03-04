@@ -22,20 +22,60 @@ Agency is an attempt to make agentic coding **stable under recursion and repetit
 
 ---
 
-## How a dive works
+## How it works
+
+The system operates at three levels of zoom. A dive is the middle layer — the autonomous submarine cycle — but it sits inside the mission lifecycle and contains its own internal pipelines.
+
+### The mission (macro)
 
 ```
-Director → Admiral (plan + dispatch)
-  → Captain (dive)
-    → Intelligence (survey) → DOSSIER
-    → Integration (build + validate) → PR + gates
-  → Admiral (intake + briefing) → Director
+Director states intent
+  → Admiral (triage + strategy + MISSION_BRIEF)
+    → Captain submerges (one or more dives)
+    → Captain surfaces with MISSION_RETURN
+  → Admiral (intake + BRIEFING) → Director
+```
+
+The Admiral never dives. The Director never talks to anyone below Admiral. Everything between submerge and surface is autonomous.
+
+### The dive (mid)
+
+```
+Captain receives brief, submerges
+  → Intelligence (survey)  → DOSSIER
+    (dossier crosses seam)
+  → Integration (build + validate) → PR + gates
+  → Captain docks, surfaces with results
 ```
 
 Two strategies run on the same pipeline:
 
 - **Survey**: chart once, build once.
 - **Calibrate**: chart → build → re‑chart → refine until convergence.
+
+### Intelligence (micro — survey)
+
+```
+Chief Analyst receives LAUNCH_BRIEF
+  → Inline collection (scope, landscape, coordination — no browser)
+  → Auth pre-flight
+  → Field Agent (browser capture) → raw evidence
+  → Desk Analyst (synthesis) → DOSSIER
+  → Chart enrichment
+  → Promote to warm tier, return
+```
+
+### Integration (micro — build)
+
+```
+Integration Chief receives dossier pointer
+  → Receiving (classify + quarantine artifacts)
+  → Plotting (fractionate dossier into work orders)
+  → Compilation (per-station: branch → build → commit)
+  → Validation (gate sequence: type-check, lint, test, build)
+  → Ship or rework loop
+  → Return with PR + validation reports
+```
 
 ---
 
