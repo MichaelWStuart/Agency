@@ -24,6 +24,19 @@ Agency is an attempt to make agentic coding **stable under recursion and repetit
 
 ## How it works
 
+```
+ ┌─────────────────────────────────────────────────────────────────┐
+ │                                                                 │
+ │   These diagrams are lossy sketches, not the architecture.      │
+ │                                                                 │
+ │   The real system is defined by the markdown constitution in     │
+ │   agency/ — typed contracts, finite catalogs, identity files,   │
+ │   and boundary enforcement. No summary diagram can faithfully    │
+ │   represent it. Read the source files if you want accuracy.     │
+ │                                                                 │
+ └─────────────────────────────────────────────────────────────────┘
+```
+
 It's one system. Here's the full flow, then zoomed into a few parts of it.
 
 ### The full flow
