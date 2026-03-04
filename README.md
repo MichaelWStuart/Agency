@@ -24,9 +24,9 @@ Agency is an attempt to make agentic coding **stable under recursion and repetit
 
 ## How it works
 
-Three phases. The dive is the autonomous middle — but significant work happens on shore before and after it.
+It's one system. Here's the full flow, then zoomed into a few parts of it.
 
-### The mission (full lifecycle)
+### The full flow
 
 ```
 Director states intent
