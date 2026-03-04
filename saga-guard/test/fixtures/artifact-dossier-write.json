@@ -1,0 +1,8 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/Users/test/memory/dossiers/test-delta-20260303T1200Z.yaml",
+    "content": "# Delta Dossier\ntype: delta\ndomain: contacts\n"
+  }
+}

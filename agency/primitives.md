@@ -290,6 +290,18 @@ Unmoored load-bearing concepts are flagged for drift risk. Not every
 concept requires a mooring, but concepts that other concepts depend on
 should have one.
 
+**Tethering** is the internal counterpart. Where mooring connects a
+concept to the real world, tethering describes how well a concept fits
+within its own frame — the survey expedition narrative.
+
+Tether strength is observable: does the concept participate naturally
+in the expedition? Can you describe it using only the metaphor, without
+breaking frame? The Chief Analyst "produces a dossier." The Integration
+Chief "receives material for processing." The Captain "surfaces with
+results." These are tightly tethered — they make sense within the
+narrative without footnotes. If a concept requires "well, this part is
+like X but not really," the tether is loose.
+
 ---
 
 ## Primitive Governance

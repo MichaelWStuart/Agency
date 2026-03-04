@@ -1,0 +1,5 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Agent",
+  "tool_result": "<<<SAGA_PAYLOAD>>>\nMISSION RETURN\n───────────────\nSTATUS: complete\nDOCKING_READY: false\nPLOT_COMPLETED: IP-1\nPLOT_REMAINING: 0\nPR: https://github.com/org/repo/pull/42\nBRANCH: feature/contacts-remove\nVALIDATION_REPORT: jobs/reports/validation-ip1.md\nLOG: jobs/log.md\nNOTES:\n  - All plots completed\n<<<END_SAGA_PAYLOAD>>>"
+}

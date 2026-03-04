@@ -9,19 +9,40 @@
 
 ---
 
-## Log Requirement
+## EVENT_RECORD
 
-All sub-agent launches MUST be logged to the active workspace log.
+### Agency Log / Integration Log (4-column)
 
-Before launching:
 ```
-| {timestamp} | {SOURCE} | LAUNCHED | {instruction_id}: {detail} |
+| Time | Source | Event | Detail |
+| {ISO-8601 UTC} | {source_enum} | {event_enum} | {string, <=100 chars} |
 ```
 
-After receiving return:
+Source enum: `AGENCY` | `INTEL` | `INTEG`
+Event enum: per Event Catalog in `contracts/catalog.md`
+
+### Agent Stream (3-column)
+
 ```
-| {timestamp} | {SOURCE} | RETURNED | {STATUS}: {summary} |
+| Time | Event | Detail |
+| {ISO-8601 UTC} | {event_enum} | {string, <=100 chars} |
 ```
+
+Event enum: per identity file Stream Logging section
+
+---
+
+## Payload Delimiters
+
+Payloads embedded in Agent tool prompts are wrapped:
+
+```
+<<<SAGA_PAYLOAD>>>
+{payload block}
+<<<END_SAGA_PAYLOAD>>>
+```
+
+Returns embedded in Agent tool output use the same delimiters.
 
 ---
 
@@ -87,12 +108,12 @@ LOG: {path}
 NOTES: [{string, <=50 chars}]
 ```
 
-**STATUS constraints:**
-- `complete` is only valid when `DOCKING_READY: true`. No other combination.
-- `partial` is only valid when `PLOT_REMAINING > 0`.
-- `escalation` must include ESCALATION payload fields with a valid NEED from the catalog.
-- No freeform statuses permitted.
-- If context pressure prevents completing docking, return `STATUS: escalation` with `NEED: CONTEXT_EXHAUSTION`.
+INVARIANTS:
+  - IF STATUS == complete THEN DOCKING_READY == true
+  - IF STATUS == partial THEN PLOT_REMAINING > 0
+  - IF STATUS == escalation THEN FIELDS(NEED, CONTEXT, ARTIFACTS, CHECKPOINT) PRESENT
+  - STATUS IN (complete, partial, escalation)
+  - IF context pressure prevents docking THEN STATUS == escalation AND NEED == CONTEXT_EXHAUSTION
 
 When `STATUS: escalation`, the return also carries the ESCALATION payload
 fields (NEED, CONTEXT, ARTIFACTS, CHECKPOINT). The Agency handles this
@@ -214,11 +235,11 @@ LOG: {path}                          # pointer to integration log artifact (jobs
 NOTES: [{string, <=50 chars}]
 ```
 
-**STATUS constraints:**
-- `complete` is only valid when `DOCKING_READY: true`. No other combination.
-- `partial` is only valid when `PLOT_REMAINING > 0`.
-- `escalation` must include ESCALATION payload fields with a valid NEED from the catalog.
-- No freeform statuses permitted.
+INVARIANTS:
+  - IF STATUS == complete THEN DOCKING_READY == true
+  - IF STATUS == partial THEN PLOT_REMAINING > 0
+  - IF STATUS == escalation THEN FIELDS(NEED, CONTEXT, ARTIFACTS, CHECKPOINT) PRESENT
+  - STATUS IN (complete, partial, escalation)
 
 When `STATUS: escalation`, the return also carries the ESCALATION payload
 fields (NEED, CONTEXT, ARTIFACTS, CHECKPOINT). The Agency handles this
@@ -241,6 +262,12 @@ ARTIFACTS:
   - {path}: {description}
 CHECKPOINT: {path | null}
 ```
+
+INVARIANTS:
+  - STATUS == escalation
+  - SEVERITY IN (routine, terminal)
+  - NEED IN (NEED catalog)
+  - IF SEVERITY == terminal THEN ANNOTATION PRESENT
 
 Integration-specific state (branch, last commit, push status) goes into
 an artifact file referenced via ARTIFACTS pointer — not top-level fields.
@@ -474,3 +501,28 @@ CALLSIGN: Datum
 VALIDATION REPORT: {per validation-report-v1 template — see templates.md}
 NOTES: [{string, <=50 chars}]
 ```
+
+---
+
+## Guard Payloads
+
+### [GUARD_VIOLATION]
+
+```
+GUARD VIOLATION
+───────────────
+LEVEL: {1 | 2}
+PHASE: {dispatch | return | log}
+PAYLOAD_TYPE: {payload_type_enum}
+VIOLATIONS:
+  - CODE: {violation_code}
+    FIELD: {field_name | null}
+    EXPECTED: {string, <=100 chars}
+    ACTUAL: {string, <=100 chars}
+ACTION: {correct_and_redispatch | review_warning}
+```
+
+Violation codes: `MISSING_FIELD`, `INVALID_ENUM`, `INVARIANT_VIOLATED`,
+`UNKNOWN_INSTRUCTION`, `UNKNOWN_NEED`, `UNKNOWN_SOURCE`, `UNKNOWN_EVENT`,
+`POINTER_MISSING`, `UNKNOWN_PAYLOAD`, `MISSING_DELIMITER`, `HEADER_MISMATCH`,
+`LENGTH_EXCEEDED`, `DRIFT_DETECTED`.

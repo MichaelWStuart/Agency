@@ -1,0 +1,8 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/Users/test/memory/events/test-event-writer-20260303.md",
+    "content": "# Test Log\n\n| Time | Source | Event | Detail |\n| ---- | ------ | ----- | ------ |\n| 2026-03-03T12:00:00Z | AGENCY | INVOKED | Test event writer invocation |\n| 2026-03-03T12:01:00Z | INTEL | LAUNCHED | Test intelligence launch |\n| 2026-03-03T12:05:00Z | INTEL | RETURNED | complete: test return |\n"
+  }
+}

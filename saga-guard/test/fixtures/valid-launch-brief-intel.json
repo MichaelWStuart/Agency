@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Agent",
+  "tool_input": {
+    "prompt": "<<<SAGA_PAYLOAD>>>\nLAUNCH BRIEF: INTELLIGENCE\n───────────────────────────\nLoad Intelligence department protocol: ~/.claude/skills/agency/afloat/intelligence/intelligence.md\nIdentity: ~/.claude/skills/agency/afloat/intelligence/chief-analyst.md\n\nINSTRUCTIONS:\n  - INTEL.COLLECT.REFERENCE\n\nARTIFACT POINTERS:\n  - memory/dossiers/contacts-delta-2026-02-28.yaml\n\nSURFACE URLS:\n  - https://app.example.com/contacts\n\nSCOPE_DOC: memory/project/scope.csv\n\nPROJECT CONTEXT:\n  config: memory/config.md\n\nRETURN CONTRACT: INTEL_RETURN\n<<<END_SAGA_PAYLOAD>>>"
+  }
+}

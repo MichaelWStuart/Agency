@@ -1,0 +1,39 @@
+{
+  "naval": [
+    "submarine", "captain", "admiral", "dive", "surface", "dock", "docking",
+    "afloat", "shore", "hull", "hatch", "muster", "watch", "bunk",
+    "moored", "mooring", "embarks", "surfacing", "submerge", "vessel",
+    "aboard", "underway", "helm", "navigation", "nautical",
+    "watertight", "compartment", "keel", "berth", "fleet"
+  ],
+  "military": [
+    "dispatch", "brief", "mission", "operation", "commanding", "subordinate",
+    "escalation", "roster", "tier", "dossier", "debrief", "triage",
+    "engagement", "personnel", "directive", "protocol",
+    "reconnaissance", "intel", "deployment", "standing orders",
+    "armory", "bulletin", "muster", "sortie", "sitrep"
+  ],
+  "refinery": [
+    "feedstock", "assay", "fractionate", "fractionation", "crude", "purity",
+    "enrichment", "quarantine", "material", "product",
+    "blend", "distill", "batch", "yield", "grade",
+    "rework", "compile", "compilation", "receiving", "inspector",
+    "work order"
+  ],
+  "surveying": [
+    "chart", "topology", "node", "edge", "region", "coverage",
+    "survey", "unmapped", "discovered", "surveyed", "cartography",
+    "terrain", "expedition", "hydrographic", "triangulation",
+    "fix", "bearing", "datum", "calibration", "convergence"
+  ],
+  "schema": [
+    "payload", "field", "type", "enum", "template", "invariant",
+    "constraint", "format", "delimiter", "contract", "schema",
+    "header", "specification", "parameter", "value", "required"
+  ],
+  "software": [
+    "branch", "commit", "merge", "pr", "ci", "git", "component",
+    "module", "test", "deploy", "rebase", "repository",
+    "debug", "refactor", "api", "endpoint"
+  ]
+}

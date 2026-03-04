@@ -78,6 +78,94 @@ The catalog grows through escalation-driven feedback during real operations.
 
 ---
 
+## Event Catalog
+
+Finite sets of valid event codes. Each event belongs to exactly one source
+namespace. Agents emit events from their namespace only.
+
+### Agency Events
+
+Source: `AGENCY` — emitted by Admiral, Captain, and agency-level orchestration.
+
+| Event | Meaning |
+|---|---|
+| `INVOKED` | Agency invoked by Director |
+| `MUSTER` | Admiral muster routine started |
+| `LAUNCHED` | Sub-agent dispatched |
+| `RETURNED` | Sub-agent returned |
+| `RESOLVED` | Escalation resolved inline |
+| `ROUTE` | Intent routed to handler |
+| `BRANCH` | Branch operation (create, switch) |
+| `MISSION_CREATED` | Mission manifest created |
+| `MISSION_COMPLETE` | Mission objective achieved |
+| `MANIFEST_UPDATED` | Mission manifest updated |
+| `CONTRACT_VIOLATION` | Payload contract violation detected |
+| `CONFLICT` | Merge or coordination conflict |
+| `ANALYSIS` | Analysis step completed |
+| `ACCEPTED` | Return accepted by parent |
+| `SUSPENDED` | Operation suspended (context pressure) |
+| `STATE_SYNC` | State synchronization event |
+| `AUTH_RESOLVED` | Authentication issue resolved |
+| `ABANDONED` | Operation abandoned |
+| `LINEAR_CLOSEOUT` | Linear ticket closed out |
+
+### Intel Events
+
+Source: `INTEL` — emitted by Intelligence department.
+Canonical definitions: `afloat/intelligence/intelligence.md` (Event Emissions).
+
+| Event | Meaning |
+|---|---|
+| `LAUNCHED` | Intelligence sub-agent started |
+| `FIELD_DEPLOYED` | Field Agent sub-agent launched |
+| `FIELD_RETURNED` | Field Agent returned evidence |
+| `DESK_DEPLOYED` | Desk Analyst sub-agent launched |
+| `DESK_RETURNED` | Desk Analyst returned dossier |
+| `DOSSIER_PRODUCED` | Dossier artifact written |
+| `CHART_UPDATED` | Chart enriched with survey data |
+| `RETURNED` | Intelligence operation complete |
+
+### Integ Events
+
+Source: `INTEG` — emitted by Integration department.
+Canonical definitions: `afloat/integration/integration.md` (Event Codes).
+
+| Event | Meaning |
+|---|---|
+| `RECV.RECEIVED` | Job entered Integration |
+| `RECV.CLASSIFIED` | Material type determined |
+| `RECV.QUARANTINED` | Artifacts quarantined from git index |
+| `RECV.DISPATCHED` | Sent to entry department |
+| `PLOT.OP_START` | Operation launched |
+| `PLOT.OP_COMPLETE` | Operation returned findings |
+| `PLOT.ASSAY_START` | Purity check started |
+| `PLOT.ASSAY_PASS` | Feedstock is pure |
+| `PLOT.ASSAY_FAIL` | Impurities remain |
+| `PLOT.FRAC_START` | Fractionation started |
+| `PLOT.FRAC_COMPLETE` | WOs cut |
+| `COMPILE.WO_START` | Integration Plot production started |
+| `COMPILE.WO_HELD` | WO blocked on dependency merge |
+| `COMPILE.WO_RELEASED` | Dependency merged, WO released |
+| `COMPILE.WO_SKIPPED` | WO already shipped, skipping |
+| `COMPILE.WO_RESUMED` | WO resuming from prior state |
+| `COMPILE.STATION_START` | Station branch created, work begun |
+| `COMPILE.COMMIT` | Code committed |
+| `COMPILE.STATION_DONE` | Station deliverables complete |
+| `COMPILE.REWORK` | Sent back from Validation |
+| `VALID.QC_START` | QC gate sequence started |
+| `VALID.GATE_PASS` | Individual gate passed |
+| `VALID.GATE_FAIL` | Individual gate failed |
+| `VALID.VERDICT_PASS` | All gates passed |
+| `VALID.VERDICT_FAIL` | Validation report: rework needed |
+| `INTEG.ESCALATION` | Scope gap escalated to Captain |
+| `INTEG.ESCALATION.TERMINAL` | Terminal escalation |
+| `INTEG.RESUMED` | Job resumed from checkpoint |
+| `INTEG.WO_SHIPPED` | WO verified (partial return milestone) |
+| `INTEG.RECOVERY` | Corrective action taken |
+| `INTEG.JOB_DONE` | All WOs verified |
+
+---
+
 ## Escalation NEED Catalog
 
 Finite set of valid NEED identifiers for ESCALATION payloads. NEEDs are

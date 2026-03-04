@@ -1,0 +1,5 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Agent",
+  "tool_result": "<<<SAGA_PAYLOAD>>>\nESCALATION\n──────────\nSTATUS: escalation\nSEVERITY: routine\nNEED: IMAGINARY_NEED\nCONTEXT: something went wrong in the process\nARTIFACTS:\n  - jobs/checkpoints/escalation-2026-03-02.md: checkpoint\nCHECKPOINT: jobs/checkpoints/escalation-2026-03-02.md\n<<<END_SAGA_PAYLOAD>>>"
+}

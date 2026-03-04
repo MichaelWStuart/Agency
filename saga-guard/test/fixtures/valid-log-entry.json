@@ -1,0 +1,8 @@
+{
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/Users/test/.claude/agency-workspace/log.md",
+    "content": "# Operation Log\n\n| Time | Source | Event | Detail |\n| ---- | ------ | ----- | ------ |\n| 2026-03-02T10:15:00Z | AGENCY | INVOKED | Contact removal survey |\n| 2026-03-02T10:16:00Z | INTEL | LAUNCHED | INTEL.COLLECT.REFERENCE: contacts |\n| 2026-03-02T10:20:00Z | INTEL | RETURNED | complete: reference dossier produced |\n"
+  }
+}

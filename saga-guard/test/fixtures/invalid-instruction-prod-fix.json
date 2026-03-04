@@ -1,0 +1,7 @@
+{
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Agent",
+  "tool_input": {
+    "prompt": "<<<SAGA_PAYLOAD>>>\nLAUNCH BRIEF: INTEGRATION\n──────────────────────────\nLoad Integration department protocol: ~/.claude/skills/agency/afloat/integration/integration.md\nIdentity: ~/.claude/skills/agency/afloat/integration/integration-chief.md\n\nINSTRUCTIONS:\n  - PROD.FIX\n\nJOB:\n  ticket: ROM-424\n  summary: Remove contact from company\n\nARTIFACT POINTERS:\n  - dossier: memory/dossiers/contacts-reference-2026-02-28.yaml\n\nCONSTRAINTS:\n  tickets: [ROM-424]\n  branch: null\n  scope: null\n\nPROJECT CONTEXT:\n  config: memory/config.md\n\nRETURN CONTRACT: INTEGRATION_RETURN\n<<<END_SAGA_PAYLOAD>>>"
+  }
+}

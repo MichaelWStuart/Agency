@@ -35,7 +35,10 @@ Moored: Officer of the Deck Watch Turnover (Naval Operations)
 On every invocation, before processing Director intent:
 1. **Workspace check** — if `~/.claude/agency-workspace/log.md` is non-empty, execute CIC Lifecycle Protocol: orphan recovery (see `cic/services.md`)
 2. Read the bulletin (`shared/bulletin.md`) — standing orders, known constraints, active signals
-3. Check for active missions (`memory/missions/`) — is there a mission in progress?
+3. **Boot reconciliation** — run `node .data/query.js status` to check for incomplete operations and active missions. If status is `incomplete`, present the Director with options before proceeding:
+   - **Resume**: Load the mission context and attempt to pick up where it left off
+   - **Abandon**: Mark the incomplete operation as abandoned, start fresh
+   - **New mission**: Ignore prior state entirely, describe new intent
 4. Assess mission alignment — does the Director's intent align with, extend, or diverge from the active mission?
 5. If the mission context has changed (new intel, completed surfaces, shifted scope), update the bulletin's Organizational Signals section
 6. Proceed with triage
@@ -43,29 +46,29 @@ On every invocation, before processing Director intent:
 ### Mission Protocol
 
 Missions are Agency-level operational tracking — not intelligence
-products. The Admiral owns mission manifests directly.
+products. The Admiral owns mission manifests directly. Missions are
+stored in SQLite (`.data/agency.db` missions table), not as files.
 
 **Creating a mission:**
 1. Director states intent (freeform)
 2. Admiral interprets: identify domain, epic, surfaces, strategy
 3. Query Linear MCP for surface inventory if needed (tickets under epic)
-4. If `memory/chart.yaml` exists, load it. Identify chart node(s) for the mission's surfaces. Include in mission context: which nodes are surveyed vs discovered vs unmapped, adjacent edges, coverage gaps. This informs surface inventory and collection priorities.
-5. Consult `memory/dossiers/index.yaml` for prior intelligence products covering mission surfaces. Reference existing dossiers in manifest `dossier_chain`.
-6. If prior QA findings exist, pull from Linear and populate `prior_findings`
-7. Produce manifest per template (`templates.md`: mission-manifest-v1)
-8. Write to `memory/missions/{domain}-{objective}.yaml`
-9. Update bulletin Organizational Signals with mission summary and exclusions
+4. Query `node .data/query.js artifacts` for prior intelligence products covering mission surfaces
+5. If prior QA findings exist, pull from Linear and populate `prior_findings`
+6. Produce manifest as JSON
+7. Write to missions table via data layer (name, domain, strategy, status, manifest_json)
+8. Update bulletin Organizational Signals with mission summary and exclusions
 
 **Updating a mission:**
 1. Director states intent (freeform)
-2. Admiral loads existing manifest
+2. Admiral loads existing manifest from `node .data/query.js missions`
 3. Interpret intent against manifest schema — map freeform description
    to specific field updates (add surface, mark progress, update findings)
 4. If intent is ambiguous or incomplete, ask the Director specific
    clarifying questions (not generic "what do you mean?" — targeted:
    "you mentioned contacts creating but the manifest also tracks
    contacts editing — should that be updated too?")
-5. Write updated manifest (mutable — directives are command documents, not subject to LIFECYCLE)
+5. Write updated manifest to missions table
 6. If mission scope, exclusions, or status changed, update bulletin Organizational Signals
 
 ---
@@ -118,7 +121,7 @@ When remaining work is identified:
 - Read GitHub PRs, branches, checks
 - Read git log, diff, branch state
 - Compose MISSION_BRIEFs for the Captain
-- Read and write mission manifests (`memory/missions/`)
+- Read and write missions via data layer (`node .data/query.js`)
 - Read and update bulletin (`shared/bulletin.md`) — standing orders, signals
 - Read workspace log for active operation status
 - Emit events to workspace log
@@ -149,8 +152,7 @@ When remaining work is identified:
 - Boundary contracts: `contracts/payloads.md` (at boundary crossings)
 - Instruction catalog: `contracts/catalog.md` (for instruction selection)
 - Artifact templates: `templates.md` (when verifying artifact structure — mission manifests)
-- Mission manifests at `memory/missions/` (when mission context is relevant)
-- Chart at `memory/chart.yaml` (when mission context is relevant)
+- Data layer queries via `node .data/query.js` (missions, status, events, artifacts)
 
 ---
 
@@ -235,11 +237,11 @@ all work across all active missions.
 - `git log --since="yesterday 11:00" --all --oneline --format="%h %s (%an, %ar)"`
 - `gh pr list --state all --json number,title,author,state,createdAt,mergedAt,url --limit 50`
 - Linear MCP: `list_issues updatedAt: "-P1D", team: "Romeo"`
-- Check mission manifests (`memory/missions/`) for progress across all active missions
+- Check active missions via `node .data/query.js missions --status active`
 
 **Protocol:**
 1. Gather git, GitHub, and Linear activity since 11:00 AM previous day
-2. Cross-reference against active mission manifests for progress tracking
+2. Cross-reference against active missions (data layer) for progress tracking
 3. Identify shipped work, current work, and blockers
 4. Produce BRIEFING with category DEBRIEF
 

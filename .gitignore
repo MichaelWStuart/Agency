@@ -1,1 +1,6 @@
 .DS_Store
+saga-guard/.cache/symbols.json
+.data/agency.db
+.data/agency.db-wal
+.data/agency.db-shm
+memory/
