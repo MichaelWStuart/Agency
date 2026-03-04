@@ -24,36 +24,46 @@ Agency is an attempt to make agentic coding **stable under recursion and repetit
 
 ## How it works
 
-The system operates at three levels of zoom. A dive is the middle layer — the autonomous submarine cycle — but it sits inside the mission lifecycle and contains its own internal pipelines.
+Three phases. The dive is the autonomous middle — but significant work happens on shore before and after it.
 
-### The mission (macro)
+### The mission (full lifecycle)
 
 ```
 Director states intent
-  → Admiral (triage + strategy + MISSION_BRIEF)
-    → Captain submerges (one or more dives)
-    → Captain surfaces with MISSION_RETURN
-  → Admiral (intake + BRIEFING) → Director
+  │
+  ▼
+Admiral — shore (plan)
+  triage → strategy → collision detection → MISSION_BRIEF
+  │
+  ▼
+Captain — autonomous (dive)
+  Intelligence → DOSSIER → Integration → PR + gates
+  │
+  ▼
+Admiral — shore (intake)
+  CI gate → review gate → delivery → closeout → BRIEFING
+  │
+  ▼
+Director receives briefing
 ```
 
-The Admiral never dives. The Director never talks to anyone below Admiral. Everything between submerge and surface is autonomous.
+The Admiral never dives. The Director never talks to anyone below Admiral. Shore-side intake (CI, review, merge, ticket updates) is Admiral-owned — the Captain and departments below never touch it.
 
-### The dive (mid)
+Two strategies run on the same pipeline:
+- **Survey**: chart once, build once.
+- **Calibrate**: chart → build → re‑chart → refine until convergence.
+
+### Inside the dive
 
 ```
 Captain receives brief, submerges
   → Intelligence (survey)  → DOSSIER
     (dossier crosses seam)
   → Integration (build + validate) → PR + gates
-  → Captain docks, surfaces with results
+  → Captain docks, surfaces with MISSION_RETURN
 ```
 
-Two strategies run on the same pipeline:
-
-- **Survey**: chart once, build once.
-- **Calibrate**: chart → build → re‑chart → refine until convergence.
-
-### Intelligence (micro — survey)
+### Inside Intelligence
 
 ```
 Chief Analyst receives LAUNCH_BRIEF
@@ -65,7 +75,7 @@ Chief Analyst receives LAUNCH_BRIEF
   → Promote to warm tier, return
 ```
 
-### Integration (micro — build)
+### Inside Integration
 
 ```
 Integration Chief receives dossier pointer
